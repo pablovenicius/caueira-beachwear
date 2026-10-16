@@ -17,8 +17,8 @@ export interface ProductVariant {
 /** Espelha `products`, com as variações já aninhadas (join feito em lib/supabase.ts). */
 export interface Product {
   id: string;
-  slug?: string;             // Adicionado para resolver o erro de compilação do TypeScript
-  sku?: string;              // Código identificador único do produto (opcional)
+  slug?: string;
+  sku?: string;
   name: string;
   description: string | null;
   price: number;
@@ -28,6 +28,12 @@ export interface Product {
   active: boolean;           // toggle do lojista — false = não aparece na vitrine
   created_at: string;
   variants: ProductVariant[];
+  
+  // Propriedades extras usadas nos produtos de exemplo
+  compareAtPrice?: number | null;
+  badge?: string | null;
+  isSet?: boolean;
+  topPrice?: number | null;
 }
 
 /** Campos que o formulário de admin envia ao criar/editar um produto (sem as variações). */
