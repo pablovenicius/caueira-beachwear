@@ -13,7 +13,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
 
   const colors = useMemo(() => {
     const map = new Map<string, { hex: string; sizes: Map<Size, number> }>();
-    for (const v of product.variants) {
+    for (const v of product.variants || []) {
       if (!map.has(v.color_name)) map.set(v.color_name, { hex: v.color_hex, sizes: new Map() });
       map.get(v.color_name)!.sizes.set(v.size, v.stock);
     }
