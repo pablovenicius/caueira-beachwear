@@ -58,7 +58,8 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
 
   const handleVariantStockChange = (p: Product, variantId: string, nextStock: number) => {
     const stock = Math.max(0, nextStock);
-    patchLocal(p.id, { variants: p.variants.map((v) => (v.id === variantId ? { ...v, stock } : v)) });
+    const variants = p.variants || [];
+    patchLocal(p.id, { variants: variants.map((v) => (v.id === variantId ? { ...v, stock } : v)) });
     startTransition(async () => {
       try {
         await updateVariantStock(variantId, stock);
@@ -76,7 +77,8 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
     startTransition(async () => {
       try {
         const created = await addVariant(p.id, { ...variantDraft, color_name: variantDraft.color_name.trim() });
-        patchLocal(p.id, { variants: [...p.variants, created] });
+        const variants = p.variants || [];
+        patchLocal(p.id, { variants: [...variants, created] });
         setVariantDraft(EMPTY_VARIANT_DRAFT);
         notify('Variação adicionada.');
       } catch (e) {
@@ -86,7 +88,8 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
   };
 
   const handleDeleteVariant = (p: Product, variantId: string) => {
-    patchLocal(p.id, { variants: p.variants.filter((v) => v.id !== variantId) });
+    const variants = p.variants || [];
+    patchLocal(p.id, { variants: variants.filter((v) => v.id !== variantId) });
     startTransition(async () => {
       try {
         await deleteVariant(variantId);
@@ -180,7 +183,8 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
             <p className="p-8 text-center text-sm text-tinta/60">Nenhum produto encontrado.</p>
           ) : (
             rows.map((p) => {
-              const totalStock = p.variants.reduce((t, v) => t + v.stock, 0);
+              const variants = p.variants || [];
+              const totalStock = variants.reduce((t, v) => t + v.stock, 0);
               const low = p.active && totalStock > 0 && totalStock <= 8;
               const isOpen = expanded === p.id;
               return (
@@ -194,7 +198,7 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
                       <div className="flex min-w-0 flex-col gap-0.5">
                         <span className="truncate text-sm text-tinta">{p.name}</span>
                         <span className="font-mono text-[11px] text-tinta/60">
-                          {p.variants.length} variações {low && <span className="text-terra">· estoque baixo</span>}
+                          {variants.length} variações {low && <span className="text-terra">· estoque baixo</span>}
                         </span>
                       </div>
                     </button>
@@ -207,7 +211,7 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
 
                     <span className="text-sm text-tinta/80">{totalStock}</span>
 
-                    <StockToggle productId={p.id} active={p.active} />
+                    <StockToggle productId={p.id} active={p.active ?? true} />
 
                     <button aria-label={`Remover ${p.name}`} onClick={() => handleDelete(p)}
                       className="justify-self-end text-tinta/50 hover:text-terra" disabled={pending}>
@@ -217,11 +221,11 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
 
                   {isOpen && (
                     <div className="flex flex-col gap-3 border-t border-areia-200 bg-areia-100/60 px-4 py-3.5">
-                      {p.variants.length === 0 ? (
+                      {variants.length === 0 ? (
                         <p className="text-sm text-tinta/60">Nenhuma variação cadastrada ainda.</p>
                       ) : (
                         <div className="flex flex-col gap-1.5">
-                          {p.variants.map((v) => (
+                          {variants.map((v) => (
                             <div key={v.id} className="flex items-center gap-2.5 text-sm">
                               <span className="h-5 w-5 flex-none rounded-full border border-areia-300" style={{ backgroundColor: v.color_hex }} />
                               <span className="w-8 flex-none font-medium">{v.size}</span>

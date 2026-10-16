@@ -35,7 +35,7 @@ export const useCart = create<CartState>()(
                   colorName,
                   unitPrice: p.price,
                   qty: 1,
-                  image: p.image_url,
+                  image: p.image_url ?? p.images?.[0]?.url ?? null,
                 },
               ];
           return { items, open: true };
