@@ -34,6 +34,7 @@ export interface Product {
   badge?: string | null;
   isSet?: boolean;
   topPrice?: number | null;
+  bottomPrice?: number | null; // Adicionado agora
 }
 
 /** Campos que o formulário de admin envia ao criar/editar um produto (sem as variações). */
