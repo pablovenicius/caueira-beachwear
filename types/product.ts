@@ -17,6 +17,8 @@ export interface ProductVariant {
 /** Espelha `products`, com as variações já aninhadas (join feito em lib/supabase.ts). */
 export interface Product {
   id: string;
+  slug?: string;             // Adicionado para resolver o erro de compilação do TypeScript
+  sku?: string;              // Código identificador único do produto (opcional)
   name: string;
   description: string | null;
   price: number;
