@@ -4,7 +4,25 @@ export type Category = 'Biquínis' | 'Maiôs' | 'Saídas de Praia';
 export const SIZES: Size[] = ['P', 'M', 'G', 'GG'];
 export const CATEGORIES: Category[] = ['Biquínis', 'Maiôs', 'Saídas de Praia'];
 
-/** Espelha `product_variants` — uma linha por combinação tamanho + cor. */
+export interface ProductImage {
+  url: string;
+  alt: string;
+  angle: 'frente' | 'costas';
+}
+
+export interface ProductColor {
+  name: string;
+  hex: string;
+}
+
+export interface StockBySize {
+  P: number;
+  M: number;
+  G: number;
+  GG: number;
+}
+
+/** Espelha `product_variants` no Supabase — uma linha por combinação tamanho + cor. */
 export interface ProductVariant {
   id: string;
   product_id: string;
@@ -14,28 +32,33 @@ export interface ProductVariant {
   stock: number;
 }
 
-/** Espelha `products`, com as variações já aninhadas (join feito em lib/supabase.ts). */
+/** Espelha a entidade Product completa (compatível com os dados de exemplo e Supabase). */
 export interface Product {
   id: string;
   slug?: string;
   sku?: string;
   name: string;
-  description: string | null;
-  price: number;
-  image_url: string | null;
   category: Category;
-  tag: string | null;        // selo opcional: "Mais Vendido", "Lançamento", "Promoção"...
-  active: boolean;           // toggle do lojista — false = não aparece na vitrine
-  created_at: string;
-  variants: ProductVariant[];
-  
-  // Propriedades extras usadas nos produtos de exemplo
+  price: number;
+  description?: string | null;
+  image_url?: string | null;
+  tag?: string | null;
+  active?: boolean;
+  created_at?: string;
+  variants?: ProductVariant[];
+
+  // Propriedades usadas em SAMPLE_PRODUCTS
   compareAtPrice?: number | null;
   badge?: string | null;
   isSet?: boolean;
   topPrice?: number | null;
   bottomPrice?: number | null;
-  colors?: Array<{ name: string; hex: string }>; // Adicionado agora
+  colors?: ProductColor[];
+  images?: ProductImage[];
+  stockBySize?: StockBySize;
+  isAvailable?: boolean;
+  rating?: number;
+  reviewCount?: number;
 }
 
 /** Campos que o formulário de admin envia ao criar/editar um produto (sem as variações). */
