@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { mpPayment } from '@/lib/mercadopago';
-import { supabaseAdmin } from '@/lib/supabase-admin';
+import { getMpPayment } from '@/lib/mercadopago';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 // Mercado Pago chama essa rota (notification_url) quando o status de um
 // pagamento muda. Sempre responde 200, mesmo em erro interno, pra evitar
@@ -22,11 +22,12 @@ export async function POST(req: Request) {
   }
 
   try {
-    const payment = await mpPayment.get({ id: paymentId });
+    const payment = await getMpPayment().get({ id: paymentId });
     const orderId = payment.external_reference;
     if (!orderId) return NextResponse.json({ received: true });
 
     const status = payment.status === 'approved' ? 'paid' : payment.status === 'rejected' ? 'failed' : 'pending';
+    const supabaseAdmin = getSupabaseAdmin();
 
     const { data: existing } = await supabaseAdmin.from('orders').select('status').eq('id', orderId).single();
 

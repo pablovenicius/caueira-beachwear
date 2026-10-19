@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { mpPreference } from '@/lib/mercadopago';
+import { getMpPreference } from '@/lib/mercadopago';
 import type { Size } from '@/types/product';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -148,7 +148,7 @@ export async function POST(req: Request) {
   if (itemsErr) return NextResponse.json({ error: itemsErr.message }, { status: 500 });
 
   try {
-    const preference = await mpPreference.create({
+    const preference = await getMpPreference().create({
       body: {
         items: resolved.map((i) => ({
           id: i.productId,
