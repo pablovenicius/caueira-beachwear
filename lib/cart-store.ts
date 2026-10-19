@@ -10,6 +10,7 @@ interface CartState {
   add: (p: Product, size: Size, colorName: string) => void;
   setQty: (key: string, qty: number) => void;
   remove: (key: string) => void;
+  clear: () => void;
   subtotal: () => number;
 }
 
@@ -44,6 +45,7 @@ export const useCart = create<CartState>()(
       setQty: (key, qty) =>
         set((s) => ({ items: qty <= 0 ? s.items.filter((i) => i.key !== key) : s.items.map((i) => (i.key === key ? { ...i, qty } : i)) })),
       remove: (key) => set((s) => ({ items: s.items.filter((i) => i.key !== key) })),
+      clear: () => set({ items: [] }),
       subtotal: () => get().items.reduce((t, i) => t + i.unitPrice * i.qty, 0),
     }),
     { name: 'caueira-cart', partialize: (s) => ({ items: s.items }) },
