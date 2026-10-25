@@ -12,7 +12,7 @@ const EMPTY_SHIPPING = { name: '', phone: '', cep: '', address: '', city: '', st
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, clear } = useCart();
+ const { items, subtotal, clear, hasHydrated } = useCart();
   const { user, session, loading: authLoading } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
   const [shipping, setShipping] = useState(EMPTY_SHIPPING);
@@ -23,9 +23,9 @@ export default function CheckoutPage() {
     if (!authLoading && !user) setAuthOpen(true);
   }, [authLoading, user]);
 
-  useEffect(() => {
-    if (items.length === 0) router.replace('/');
-  }, [items.length, router]);
+ useEffect(() => {
+  if (hasHydrated && items.length === 0) router.replace('/');
+}, [hasHydrated, items.length, router]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

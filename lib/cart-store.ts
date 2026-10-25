@@ -6,6 +6,8 @@ import type { CartItem, Product, Size } from '@/types/product';
 interface CartState {
   items: CartItem[];
   open: boolean;
+  hasHydrated: boolean;
+setHasHydrated: (v: boolean) => void;
   setOpen: (o: boolean) => void;
   add: (p: Product, size: Size, colorName: string) => void;
   setQty: (key: string, qty: number) => void;
@@ -19,6 +21,8 @@ export const useCart = create<CartState>()(
     (set, get) => ({
       items: [],
       open: false,
+      hasHydrated: false,
+setHasHydrated: (hasHydrated) => set({ hasHydrated }),
       setOpen: (open) => set({ open }),
       add: (p, size, colorName) => {
         const key = `${p.id}-${size}-${colorName}`;
@@ -48,6 +52,12 @@ export const useCart = create<CartState>()(
       clear: () => set({ items: [] }),
       subtotal: () => get().items.reduce((t, i) => t + i.unitPrice * i.qty, 0),
     }),
-    { name: 'caueira-cart', partialize: (s) => ({ items: s.items }) },
+    {
+  name: 'caueira-cart',
+  partialize: (s) => ({ items: s.items }),
+  onRehydrateStorage: () => (state) => {
+    state?.setHasHydrated(true);
+  },
+},
   ),
 );
