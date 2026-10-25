@@ -1,3 +1,6 @@
+'use client';
+import { useAuth } from '@/lib/auth-context';
+
 const FOOTER_COLS = [
   { title: 'Ajuda', links: [
     { label: 'Guia de tamanhos', href: '#' },
@@ -9,13 +12,15 @@ const FOOTER_COLS = [
     { label: 'Nossa história', href: '#' },
     { label: 'Cuidados com as peças', href: '#' },
     { label: 'Política de privacidade', href: '#' },
-    { label: 'Painel do lojista', href: '/admin' },
+    // Só aparece pra quem está logado e cadastrado em public.admins (ver useAuth().isAdmin abaixo).
+    { label: 'Painel do lojista', href: '/admin', adminOnly: true },
   ] },
 ];
 
 const PAYMENTS = ['PIX', 'Visa', 'Mastercard', 'Elo', 'Amex', 'Boleto'];
 
 export function Footer() {
+  const { isAdmin } = useAuth();
   return (
     <footer className="bg-cafe py-12 text-areia-200">
       <div className="mx-auto flex max-w-7xl flex-col gap-9 px-6">
@@ -38,9 +43,11 @@ export function Footer() {
           {FOOTER_COLS.map((c) => (
             <div key={c.title} className="flex flex-1 flex-col gap-2.5" style={{ flexBasis: 160 }}>
               <div className="text-xs uppercase tracking-widest text-sol">{c.title}</div>
-              {c.links.map((l) => (
-                <a key={l.label} href={l.href} className="min-h-[28px] text-sm text-areia-200 hover:text-white">{l.label}</a>
-              ))}
+              {c.links
+                .filter((l) => !l.adminOnly || isAdmin)
+                .map((l) => (
+                  <a key={l.label} href={l.href} className="min-h-[28px] text-sm text-areia-200 hover:text-white">{l.label}</a>
+                ))}
             </div>
           ))}
         </div>

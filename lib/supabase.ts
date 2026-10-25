@@ -126,3 +126,27 @@ export async function signInWithOAuth(provider: 'google' | 'facebook') {
   });
   if (error) throw error;
 }
+
+// ---------------------------------------------------------------------------
+// Upload de imagens de produto (Supabase Storage)
+// ---------------------------------------------------------------------------
+
+/**
+ * Sobe uma foto de produto pro bucket público "product-images" e devolve a
+ * URL pública (pra salvar em products.image_url). As policies do bucket
+ * (migration 004) só deixam quem está em public.admins enviar/remover —
+ * qualquer um pode ler, já que as fotos aparecem na vitrine pra todo mundo.
+ */
+export async function uploadProductImage(file: File): Promise<string> {
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const path = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const { error } = await supabase.storage.from('product-images').upload(path, file, {
+    cacheControl: '3600',
+    upsert: false,
+  });
+  if (error) throw error;
+
+  const { data } = supabase.storage.from('product-images').getPublicUrl(path);
+  return data.publicUrl;
+}

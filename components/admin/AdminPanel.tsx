@@ -3,7 +3,15 @@ import Image from 'next/image';
 import { useMemo, useState, useTransition } from 'react';
 import type { Category, Product, ProductInput, Size, VariantInput } from '@/types/product';
 import { CATEGORIES, SIZES } from '@/types/product';
-import { addVariant, createProduct, deleteProduct, deleteVariant, updateProduct, updateVariantStock } from '@/lib/supabase';
+import {
+  addVariant,
+  createProduct,
+  deleteProduct,
+  deleteVariant,
+  updateProduct,
+  updateVariantStock,
+  uploadProductImage,
+} from '@/lib/supabase';
 import { StockToggle } from '@/components/admin/StockToggle';
 
 const EMPTY_FORM: ProductInput = {
@@ -27,6 +35,7 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
   const [variantDraft, setVariantDraft] = useState(EMPTY_VARIANT_DRAFT);
   const [formErr, setFormErr] = useState('');
   const [toast, setToast] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const rows = useMemo(() => {
@@ -111,6 +120,19 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
         setProducts((list) => [...list, p]);
       }
     });
+  };
+
+  const handleImageUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const url = await uploadProductImage(file);
+      setForm((f) => ({ ...f, image_url: url }));
+      notify('Foto enviada.');
+    } catch (e) {
+      notify(e instanceof Error ? e.message : 'Não deu pra enviar a foto. Verifique o tamanho/formato e tente de novo.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const addDraftVariant = () => {
@@ -319,12 +341,33 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
               className="h-11 rounded-sm border border-areia-300 bg-white px-3 text-sm outline-none" />
           </label>
 
-          <label className="flex flex-col gap-1.5 text-sm">
-            URL da foto
+          <div className="flex flex-col gap-1.5 text-sm">
+            Foto do produto
+            <div className="flex items-center gap-3">
+              {form.image_url && (
+                <div className="relative h-16 w-14 flex-none overflow-hidden rounded-sm bg-areia-200">
+                  <Image src={form.image_url} alt="" fill className="object-cover" />
+                </div>
+              )}
+              <label className="flex h-11 flex-1 cursor-pointer items-center justify-center rounded-sm border border-dashed border-areia-300 bg-white px-3 text-center text-sm text-tinta/70 hover:bg-areia-100">
+                {uploading ? 'Enviando…' : 'Enviar foto do computador'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleImageUpload(file);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+            </div>
             <input value={form.image_url ?? ''} onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
-              placeholder="https://…"
-              className="h-11 rounded-sm border border-areia-300 bg-white px-3 text-sm outline-none" />
-          </label>
+              placeholder="ou cole uma URL (https://…)"
+              className="h-9 rounded-sm border border-areia-300 bg-white px-3 text-xs outline-none" />
+          </div>
 
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} />
