@@ -2,22 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* altura real da nav inferior mobile, usada pra dar padding ao conteúdo
+     e pra calcular a posição da barra fixa de compra no PDP — num lugar
+     só, pra não ficar com números mágicos espalhados pelos componentes. */
+  --bottom-nav-h: 60px;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
-  background-color: #FBF7F1;
+  background-color: #FAF8F5;
 }
 
 ::selection {
-  background-color: #2E5C50;
-  color: #FBF7F1;
+  background-color: #15171B;
+  color: #FAF8F5;
 }
 
 /* Foco visível e consistente em qualquer elemento navegável por teclado —
    sem isso, o navegador usa o retângulo azul padrão, que destoa da marca
    e some em alguns componentes com outline:none aplicado via Tailwind. */
 :focus-visible {
-  outline: 2px solid #2E5C50;
+  outline: 2px solid #FF5B3C;
   outline-offset: 2px;
+}
+
+/* Esconde a barra de rolagem das prateleiras horizontais (categorias, hero,
+   carrosséis de produto) sem desativar o scroll — só estética, o teclado e
+   o touch continuam rolando normalmente. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

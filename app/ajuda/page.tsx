@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 
 export const metadata: Metadata = { title: 'Perguntas frequentes' };
@@ -60,6 +61,7 @@ export default function AjudaPage() {
       </main>
       <Footer />
       <CartDrawer />
+      <BottomNav />
     </>
   );
 }

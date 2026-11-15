@@ -4,6 +4,7 @@ import { getActiveProducts } from '@/lib/supabase';
 import type { Category } from '@/types/product';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 import { ShopGrid } from '@/components/ShopGrid';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -58,6 +59,7 @@ export default async function CategoriaPage({ params }: Props) {
       </main>
       <Footer />
       <CartDrawer />
+      <BottomNav />
       <WhatsAppButton />
     </>
   );

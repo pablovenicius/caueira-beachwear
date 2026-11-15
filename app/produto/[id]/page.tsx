@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getProductById } from '@/lib/supabase';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { ProductDetail } from '@/components/ProductDetail';
@@ -28,7 +29,8 @@ export default async function ProdutoPage({ params }: Props) {
       </main>
       <Footer />
       <CartDrawer />
-      <WhatsAppButton />
+      <BottomNav />
+      <WhatsAppButton hideOnMobile />
     </>
   );
 }

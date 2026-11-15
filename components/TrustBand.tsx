@@ -23,7 +23,7 @@ export function TrustBand() {
     <section aria-label="Por que comprar na Caueira" className="bg-mar-700 py-16 text-areia-50">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 md:grid-cols-[1fr_1fr] md:gap-16">
         <div className="flex flex-col gap-4">
-          <p className="font-display text-pretty text-3xl font-normal leading-tight md:text-4xl">
+          <p className="font-display text-pretty text-3xl italic leading-tight md:text-4xl">
             Peças pensadas pra um dia inteiro de sol, água salgada e areia — sem perder a forma.
           </p>
           <p className="max-w-prose text-[15px] leading-relaxed text-areia-50/80">

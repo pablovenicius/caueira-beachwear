@@ -2,6 +2,7 @@ import { getActiveProducts } from '@/lib/supabase';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 import { ShopGrid } from '@/components/ShopGrid';
 import { TrustBand } from '@/components/TrustBand';
@@ -28,6 +29,7 @@ export default async function Home() {
 
       <Footer />
       <CartDrawer />
+      <BottomNav />
       <WhatsAppButton />
     </>
   );

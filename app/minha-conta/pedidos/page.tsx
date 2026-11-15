@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 import { useAuth } from '@/lib/auth-context';
 import { getOrders } from '@/lib/supabase';
@@ -74,6 +75,7 @@ export default function MeusPedidosPage() {
       </main>
       <Footer />
       <CartDrawer />
+      <BottomNav />
     </>
   );
 }

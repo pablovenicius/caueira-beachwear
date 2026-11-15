@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 
 export const metadata: Metadata = { title: 'Política de privacidade' };
@@ -59,6 +60,7 @@ export default function PrivacidadePage() {
       </main>
       <Footer />
       <CartDrawer />
+      <BottomNav />
     </>
   );
 }

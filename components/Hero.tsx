@@ -1,70 +1,83 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const HEROES = [
   {
     kicker: 'Coleção verão',
-    title: 'Onde o sol encontra o mar.',
-    body: 'Biquínis e maiôs modelados pra se mover com você — do mergulho ao fim de tarde na areia.',
+    title: 'Pele no sol,\npés n’areia.',
+    body: 'Biquínis e maiôs modelados pra se mover com você — do mergulho ao fim de tarde.',
     cta: 'Ver coleção',
     href: '/categoria/lancamentos',
-    sky: 'linear-gradient(180deg, #E7B15C 0%, #D98B55 38%, #A8402A 62%, #2E5C50 100%)',
+    sky: 'radial-gradient(130% 100% at 15% 100%, #FFB238 0%, #FF5B3C 38%, #B8311A 62%, #0B2436 100%)',
   },
   {
     kicker: 'Maiôs · peça única',
-    title: 'Linhas que abraçam o verão.',
+    title: 'Linhas que\nabraçam.',
     body: 'Caimento sem marcas, tecido que não desbota e proteção UV50+ em cada peça.',
     cta: 'Ver maiôs',
     href: '/categoria/maios',
-    sky: 'linear-gradient(180deg, #D9A15C 0%, #B9714F 40%, #83402F 64%, #1C3830 100%)',
+    sky: 'radial-gradient(130% 100% at 85% 100%, #FFB238 0%, #FF5B3C 36%, #93301B 64%, #061722 100%)',
   },
   {
     kicker: 'Só esta semana',
-    title: 'Promoção de fim de tarde.',
+    title: 'Fim de tarde\nem promoção.',
     body: 'Até 15% off em peças selecionadas enquanto durar o estoque.',
     cta: 'Ver promoções',
     href: '/categoria/promocoes',
-    sky: 'linear-gradient(180deg, #E3C077 0%, #C07A4D 42%, #8A3A28 66%, #2E5C50 100%)',
+    sky: 'radial-gradient(130% 100% at 15% 100%, #FFCF6B 0%, #FF5B3C 40%, #0B2436 100%)',
   },
 ];
 
+/**
+ * Painéis em scroll-snap horizontal — no touch, dá pra arrastar com o dedo
+ * como num carrossel de app de verdade, não só esperar o timer ou acertar
+ * uma bolinha minúscula. O título sangra até a borda esquerda da tela
+ * (sem padding simétrico) pra parecer recorte editorial, não um cartão
+ * centralizado genérico.
+ */
 export function Hero() {
-  const [idx, setIdx] = useState(0);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
 
-  useEffect(() => {
-    const id = setInterval(() => setIdx((i) => (i + 1) % HEROES.length), 7000);
-    return () => clearInterval(id);
-  }, []);
-
-  const hero = HEROES[idx];
+  const onScroll = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setActive(Math.round(el.scrollLeft / el.clientWidth));
+  };
 
   return (
-    <section aria-label="Destaques" className="relative flex h-[560px] items-end overflow-hidden md:h-[640px]">
-      <div className="absolute inset-0 transition-[background] duration-1000" style={{ background: hero.sky }} />
-      {/* horizonte — uma linha clara onde o céu "encontra" o mar, lido de longe como o traço do título */}
-      <div className="absolute inset-x-0 bottom-[38%] h-px bg-areia-50/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-tinta/55 via-transparent to-transparent" />
+    <section aria-label="Destaques" className="relative">
+      <div
+        ref={scrollerRef}
+        onScroll={onScroll}
+        className="no-scrollbar flex h-[78vh] max-h-[680px] min-h-[460px] snap-x snap-mandatory overflow-x-auto scroll-smooth"
+      >
+        {HEROES.map((hero) => (
+          <div key={hero.title} className="relative flex h-full w-full shrink-0 snap-center items-end overflow-hidden">
+            <div className="absolute inset-0" style={{ background: hero.sky }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-mar-700/70 via-transparent to-transparent" />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start gap-4 px-6 pb-16">
-        <span className="text-sm text-areia-100/90">{hero.kicker}</span>
-        <h1 className="max-w-xl text-pretty font-display text-5xl font-normal leading-[1.05] text-areia-50 md:text-[80px] md:leading-[0.98]">
-          {hero.title}
-        </h1>
-        <p className="max-w-sm text-pretty text-[15px] leading-relaxed text-areia-50/85">{hero.body}</p>
-        <Link href={hero.href}
-          className="mt-2 inline-flex h-[52px] items-center rounded-sm bg-areia-50 px-8 text-sm font-medium text-tinta transition hover:bg-white">
-          {hero.cta}
-        </Link>
+            <div className="relative flex w-full flex-col gap-3 py-12 pl-5 pr-8 md:py-16 md:pl-10">
+              <span className="text-[13px] font-medium text-areia-50/80">{hero.kicker}</span>
+              <h1 className="whitespace-pre-line text-pretty font-display text-[56px] italic leading-[0.96] text-areia-50 md:text-[104px]">
+                {hero.title}
+              </h1>
+              <p className="max-w-[300px] text-[15px] leading-relaxed text-areia-50/85 md:max-w-sm">{hero.body}</p>
+              <Link href={hero.href}
+                className="mt-2 inline-flex h-[50px] w-fit items-center bg-areia-50 px-7 text-sm font-semibold text-tinta transition hover:bg-white">
+                {hero.cta}
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        <div className="mt-4 flex gap-2" role="tablist" aria-label="Banners">
-          {HEROES.map((h, i) => (
-            <button key={h.title} role="tab" aria-selected={i === idx} aria-label={`Banner ${i + 1}: ${h.title}`}
-              onClick={() => setIdx(i)}
-              className="h-1 rounded-full bg-areia-50 transition-all duration-300"
-              style={{ width: i === idx ? 28 : 10, opacity: i === idx ? 1 : 0.45 }} />
-          ))}
-        </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center gap-1.5">
+        {HEROES.map((h, i) => (
+          <span key={h.title} aria-hidden className="h-1 rounded-full bg-areia-50 transition-all duration-300"
+            style={{ width: i === active ? 24 : 7, opacity: i === active ? 1 : 0.45 }} />
+        ))}
       </div>
     </section>
   );

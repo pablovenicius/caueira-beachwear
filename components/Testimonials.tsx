@@ -20,7 +20,7 @@ export function Testimonials() {
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="flex flex-col gap-1.5">
-            <h2 className="font-display text-3xl font-normal text-tinta">Quem usa, ama</h2>
+            <h2 className="font-display text-3xl italic text-tinta">Quem usa, ama</h2>
             <p className="text-[15px] text-tinta/60">4,9 de 5 em 1.284 avaliações</p>
           </div>
           <div className="flex gap-2">

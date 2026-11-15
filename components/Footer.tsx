@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
+import { Logo } from '@/components/Logo';
 
 const FOOTER_COLS = [
   {
@@ -26,11 +27,11 @@ const PAYMENTS = ['Pix', 'Visa', 'Mastercard', 'Elo', 'Amex', 'Boleto'];
 export function Footer() {
   const { isAdmin } = useAuth();
   return (
-    <footer className="bg-tinta py-14 text-areia-200">
+    <footer className="bg-mar-700 pt-14 text-areia-200 pb-[calc(3.5rem+var(--bottom-nav-h))] md:pb-14">
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6">
         <div className="flex flex-wrap gap-10">
           <div className="flex flex-1 flex-col gap-3" style={{ flexBasis: 280 }}>
-            <div className="font-display text-2xl tracking-wide text-sol">Caueira</div>
+            <Logo variant="paper" />
             <p className="max-w-xs text-[15px] leading-relaxed text-areia-200/85">
               Receba lançamentos e ganhe 10% off na primeira compra.
             </p>
@@ -38,7 +39,7 @@ export function Footer() {
               <input aria-label="Seu e-mail" placeholder="Seu e-mail" type="email"
                 className="h-11 min-w-0 flex-1 rounded-sm border border-white/20 bg-transparent px-3.5 text-sm text-white outline-none placeholder:text-areia-200/50" />
               <button type="submit"
-                className="h-11 flex-none rounded-sm bg-sol px-5 text-sm font-medium text-tinta">
+                className="h-11 flex-none rounded-sm bg-terra px-5 text-sm font-semibold text-white hover:bg-terra-700">
                 Quero
               </button>
             </form>

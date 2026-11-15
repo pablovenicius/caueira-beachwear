@@ -40,35 +40,35 @@ export function ProductDetail({ product }: { product: Product }) {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8 md:py-12">
-      <nav aria-label="Caminho" className="mb-6 text-sm text-tinta/50">
+    <div className="mx-auto max-w-6xl px-4 py-6 pb-[calc(96px+var(--bottom-nav-h))] md:px-6 md:py-12 md:pb-12">
+      <nav aria-label="Caminho" className="mb-5 text-sm text-tinta/50 md:mb-6">
         <Link href="/" className="hover:text-tinta">Início</Link>
         <span className="mx-1.5">/</span>
         <span className="text-tinta/70">{product.category}</span>
       </nav>
 
-      <div className="grid gap-10 md:grid-cols-2 md:gap-14">
-        <div className="relative aspect-product overflow-hidden rounded-sm bg-areia-200">
+      <div className="grid gap-6 md:grid-cols-2 md:gap-14">
+        <div className="relative aspect-product overflow-hidden bg-areia-200">
           {product.image_url ? (
             <Image src={product.image_url} alt={product.name} fill priority sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
           ) : (
             <div className="h-full w-full bg-areia-300" />
           )}
           {product.tag && (
-            <span className="absolute left-4 top-4 rounded-sm bg-areia-50 px-2.5 py-1 text-xs text-tinta/80">{product.tag}</span>
+            <span className="absolute left-4 top-4 bg-areia-50 px-2.5 py-1 text-xs font-semibold text-tinta/80">{product.tag}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-5">
           <div>
             <p className="text-sm text-tinta/55">{product.category}</p>
-            <h1 className="mt-1 font-display text-3xl font-normal text-tinta">{product.name}</h1>
+            <h1 className="mt-1 font-display text-2xl italic text-tinta md:text-3xl">{product.name}</h1>
           </div>
 
           <div className="flex flex-col gap-0.5">
             <p className="font-display text-2xl text-tinta">{brl(product.price)}</p>
             <p className="text-[15px] text-tinta/60">
-              {MAX_INSTALLMENTS}x de {brl(product.price / MAX_INSTALLMENTS)} · <span className="text-mar">{brl(product.price * (1 - PIX_DISCOUNT))} no Pix</span>
+              {MAX_INSTALLMENTS}x de {brl(product.price / MAX_INSTALLMENTS)} · <span className="font-medium text-terra">{brl(product.price * (1 - PIX_DISCOUNT))} no Pix</span>
             </p>
           </div>
 
@@ -113,10 +113,19 @@ export function ProductDetail({ product }: { product: Product }) {
                 )}
               </div>
 
-              <button type="button" onClick={handleAdd} disabled={!selectedSize}
-                className="mt-1 h-14 rounded-sm bg-terra text-sm font-medium text-white transition hover:bg-terra-700 disabled:cursor-not-allowed disabled:opacity-40">
-                {selectedSize ? 'Adicionar à sacola' : 'Escolha um tamanho'}
-              </button>
+              {/* No mobile essa barra fica fixa acima da nav inferior — sempre
+                  ao alcance do polegar, sem precisar rolar de volta pro topo
+                  depois de escolher a cor/tamanho. No desktop é só mais um
+                  botão no fluxo normal da página. */}
+              <div className="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-20 border-t border-areia-200 bg-areia-50/97 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur
+                              md:static md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+                <div className="mx-auto flex max-w-6xl items-center gap-3 md:max-w-none md:p-0">
+                  <button type="button" onClick={handleAdd} disabled={!selectedSize}
+                    className="h-14 w-full bg-terra text-sm font-semibold text-white transition hover:bg-terra-700 disabled:cursor-not-allowed disabled:opacity-40">
+                    {selectedSize ? 'Adicionar à sacola' : 'Escolha um tamanho'}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
