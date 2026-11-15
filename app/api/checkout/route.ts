@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getMpPreference } from '@/lib/mercadopago';
+import { checkCoupon, registerCouponUse } from '@/lib/coupons';
 import type { Size } from '@/types/product';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -58,11 +59,13 @@ export async function POST(req: Request) {
   }
   const customerId = userData.user.id;
 
-  const body = (await req.json().catch(() => null)) as { items?: CheckoutItemInput[]; shipping?: ShippingInput } | null;
+  const body = (await req.json().catch(() => null)) as
+    | { items?: CheckoutItemInput[]; shipping?: ShippingInput; couponCode?: string }
+    | null;
   if (!body?.items?.length || !body.shipping) {
     return NextResponse.json({ error: 'Carrinho ou endereço inválido.' }, { status: 400 });
   }
-  const { items, shipping } = body;
+  const { items, shipping, couponCode } = body;
 
   for (const key of ['name', 'phone', 'cep', 'address', 'city', 'state'] as const) {
     if (!shipping[key]?.trim()) {
@@ -114,12 +117,29 @@ export async function POST(req: Request) {
 
   const subtotal = resolved.reduce((t, i) => t + i.unitPrice * i.qty, 0);
 
+  // Nunca confia no desconto calculado no navegador — revalida o cupom
+  // aqui, com o subtotal recém-recalculado a partir do banco.
+  let discount = 0;
+  let appliedCoupon: string | null = null;
+  if (couponCode?.trim()) {
+    const coupon = await checkCoupon(couponCode, subtotal);
+    if (!coupon.valid) {
+      return NextResponse.json({ error: coupon.message }, { status: 400 });
+    }
+    discount = coupon.discount ?? 0;
+    appliedCoupon = coupon.code ?? null;
+  }
+  const total = Math.max(0, subtotal - discount);
+
   const { data: order, error: orderErr } = await supabase
     .from('orders')
     .insert({
       customer_id: customerId,
       status: 'pending',
       subtotal,
+      coupon_code: appliedCoupon,
+      discount,
+      total,
       shipping_name: shipping.name.trim(),
       shipping_phone: shipping.phone.trim(),
       shipping_cep: shipping.cep.trim(),
@@ -147,16 +167,25 @@ export async function POST(req: Request) {
   );
   if (itemsErr) return NextResponse.json({ error: itemsErr.message }, { status: 500 });
 
-  try {
-    const preference = await getMpPreference().create({
-      body: {
-        items: resolved.map((i) => ({
+  // O Mercado Pago não aceita item com preço negativo, então um "item de
+  // desconto" não funciona. Com cupom aplicado, manda um único item
+  // consolidado no valor já com desconto — sem cupom, mantém a lista
+  // detalhada de peças de sempre.
+  const mpItems =
+    discount > 0
+      ? [{ id: order.id, title: `Pedido Caueira Beachwear (cupom ${appliedCoupon})`, quantity: 1, unit_price: total, currency_id: 'BRL' }]
+      : resolved.map((i) => ({
           id: i.productId,
           title: `${i.name} (${i.size}, ${i.colorName})`,
           quantity: i.qty,
           unit_price: i.unitPrice,
           currency_id: 'BRL',
-        })),
+        }));
+
+  try {
+    const preference = await getMpPreference().create({
+      body: {
+        items: mpItems,
         payer: { name: shipping.name },
         external_reference: order.id,
         back_urls: {
@@ -170,6 +199,7 @@ export async function POST(req: Request) {
     });
 
     await supabase.from('orders').update({ mp_preference_id: preference.id }).eq('id', order.id);
+    if (appliedCoupon) await registerCouponUse(appliedCoupon);
 
     return NextResponse.json({ orderId: order.id, initPoint: preference.init_point });
   } catch (e) {

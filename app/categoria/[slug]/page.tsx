@@ -6,6 +6,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CartDrawer } from '@/components/CartDrawer';
 import { ShopGrid } from '@/components/ShopGrid';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 export const revalidate = 60;
 
@@ -57,6 +58,7 @@ export default async function CategoriaPage({ params }: Props) {
       </main>
       <Footer />
       <CartDrawer />
+      <WhatsAppButton />
     </>
   );
 }

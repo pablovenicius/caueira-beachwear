@@ -51,18 +51,18 @@ export default function PedidoPage({ params }: { params: { id: string } }) {
     <>
       <Header />
       <main className="mx-auto flex max-w-2xl flex-col gap-5 px-6 py-10">
-        <h1 className="font-display text-2xl font-normal text-tinta">Seu pedido</h1>
+        <h1 className="font-display text-3xl font-normal text-tinta">Seu pedido</h1>
 
         {authLoading || loading ? (
-          <p className="text-sm text-tinta/70">Carregando…</p>
+          <p className="text-[15px] text-tinta/70">Carregando…</p>
         ) : !user ? (
-          <p className="text-sm text-tinta/70">Entre na sua conta pra ver esse pedido.</p>
+          <p className="text-[15px] text-tinta/70">Entre na sua conta pra ver esse pedido.</p>
         ) : !order ? (
-          <p className="text-sm text-tinta/70">Pedido não encontrado.</p>
+          <p className="text-[15px] text-tinta/70">Pedido não encontrado.</p>
         ) : (
           <>
             <p
-              className={`text-sm font-medium ${
+              className={`text-[15px] font-medium ${
                 order.status === 'paid' ? 'text-mar' : order.status === 'failed' ? 'text-terra' : 'text-tinta/70'
               }`}
               aria-live="polite"
@@ -70,10 +70,10 @@ export default function PedidoPage({ params }: { params: { id: string } }) {
               {STATUS_LABEL[order.status]}
             </p>
 
-            <div className="rounded bg-areia-100 p-4 text-sm">
+            <div className="rounded-sm border border-areia-300 bg-white p-5 text-[15px]">
               <ul className="flex flex-col gap-1.5">
                 {items.map((it) => (
-                  <li key={it.id} className="flex justify-between gap-3">
+                  <li key={it.id} className="flex justify-between gap-3 text-tinta">
                     <span className="min-w-0 truncate">
                       {it.qty}x {it.name} ({it.size}, {it.color_name})
                     </span>
@@ -81,17 +81,29 @@ export default function PedidoPage({ params }: { params: { id: string } }) {
                   </li>
                 ))}
               </ul>
-              <div className="mt-3 flex justify-between border-t border-areia-300 pt-2 font-medium">
-                <span>Total</span>
-                <span>{brl(order.subtotal)}</span>
+              <div className="mt-3 flex flex-col gap-1 border-t border-areia-300 pt-3">
+                <div className="flex justify-between text-tinta/70">
+                  <span>Subtotal</span>
+                  <span>{brl(order.subtotal)}</span>
+                </div>
+                {order.discount > 0 && (
+                  <div className="flex justify-between text-mar">
+                    <span>Desconto {order.coupon_code ? `(${order.coupon_code})` : ''}</span>
+                    <span>-{brl(order.discount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-medium text-tinta">
+                  <span>Total</span>
+                  <span>{brl(order.total ?? order.subtotal)}</span>
+                </div>
               </div>
             </div>
 
-            <p className="text-xs text-tinta/60">
+            <p className="text-sm text-tinta/60">
               Entrega para {order.shipping_name} — {order.shipping_address}, {order.shipping_city}/{order.shipping_state}
             </p>
 
-            <Link href="/" className="text-sm text-sol-700 underline">
+            <Link href="/" className="text-sm text-mar underline">
               Voltar pra loja
             </Link>
           </>

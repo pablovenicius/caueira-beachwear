@@ -81,6 +81,9 @@ export interface Order {
   customer_id: string;
   status: OrderStatus;
   subtotal: number;
+  coupon_code: string | null;
+  discount: number;
+  total: number;
   shipping_name: string;
   shipping_phone: string;
   shipping_cep: string;

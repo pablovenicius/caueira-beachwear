@@ -32,14 +32,22 @@ export function ShopGrid({
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-14">
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filtrar por peça">
+    <section className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 className="font-display text-3xl font-normal text-tinta">{title}</h2>
+          <p className="mt-1.5 text-[15px] text-tinta/60">{subtitle}</p>
+        </div>
+        <span className="text-sm text-tinta/50">{filtered.length} {filtered.length === 1 ? 'peça' : 'peças'}</span>
+      </div>
+
+      <div className="mb-8 flex gap-2 overflow-x-auto border-b border-areia-300 pb-4" role="group" aria-label="Filtrar por peça">
         {PIECE_FILTERS.map((f) => {
           const on = piece === f;
           return (
             <button key={f} type="button" aria-pressed={on} onClick={() => setPiece(f)}
-              className={`h-[42px] flex-none rounded-full border px-[18px] text-sm transition ${
-                on ? 'border-sol-700 bg-sol-700 text-white' : 'border-areia-300 bg-white text-tinta hover:border-sol-700'
+              className={`h-10 flex-none rounded-full border px-4 text-sm transition ${
+                on ? 'border-tinta bg-tinta text-white' : 'border-areia-300 bg-white text-tinta/75 hover:border-tinta'
               }`}>
               {f}
             </button>
@@ -47,21 +55,13 @@ export function ShopGrid({
         })}
       </div>
 
-      <div className="mb-8 flex items-end justify-between gap-4 border-b border-areia-300 pb-4">
-        <div>
-          <h2 className="font-display text-2xl font-normal text-tinta">{title}</h2>
-          <p className="mt-1 text-xs uppercase tracking-wider text-tinta/60">{subtitle}</p>
-        </div>
-        <span className="text-xs text-tinta/60">{filtered.length} peças</span>
-      </div>
-
       {filtered.length === 0 ? (
         <p className="py-16 text-center text-sm text-tinta/60">
           {emptyMessage}{' '}
-          <button onClick={() => setPiece('Todos')} className="text-sol-700 underline">Limpar filtros</button>
+          <button onClick={() => setPiece('Todos')} className="text-mar underline">Limpar filtros</button>
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-8 lg:grid-cols-4">
           {filtered.map((product, i) => (
             <ProductCard key={product.id} product={product} priority={i < 4} />
           ))}

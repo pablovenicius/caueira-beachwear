@@ -29,35 +29,35 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   const activeColor = colors.find((c) => c.name === selectedColor) ?? colors[0];
 
   return (
-    <article className="group flex min-w-0 flex-col gap-2.5">
-      <div className="relative aspect-product overflow-hidden rounded bg-areia-200">
+    <article className="group flex min-w-0 flex-col gap-3">
+      <div className="relative aspect-product overflow-hidden rounded-sm bg-areia-200">
         <Link href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`}>
           {product.image_url ? (
             <Image src={product.image_url} alt={product.name} fill priority={priority}
               sizes="(max-width: 768px) 50vw, 25vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105" />
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
           ) : (
             <div className="h-full w-full bg-areia-300" />
           )}
         </Link>
 
         {product.tag && (
-          <span className="absolute left-2.5 top-2.5 rounded-sm bg-areia-50 px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-sol-700">
+          <span className="absolute left-3 top-3 rounded-sm bg-areia-50 px-2.5 py-1 text-xs text-tinta/80">
             {product.tag}
           </span>
         )}
 
         {soldOut ? (
-          <span className="absolute inset-x-0 bottom-0 bg-tinta/80 py-2 text-center text-xs uppercase tracking-widest text-areia-50">Esgotado</span>
+          <span className="absolute inset-x-0 bottom-0 bg-tinta/85 py-2 text-center text-xs text-areia-50">Esgotado</span>
         ) : (
           <>
             <button type="button" onClick={() => setQuickOpen((v) => !v)}
               aria-expanded={quickOpen} aria-label={`Compra rápida: ${product.name}`}
-              className="absolute bottom-2.5 right-2.5 grid h-11 w-11 place-items-center rounded-full bg-areia-50 text-tinta shadow-sm hover:bg-terra hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-terra">
+              className="absolute bottom-3 right-3 grid h-11 w-11 place-items-center rounded-full bg-areia-50 text-tinta opacity-100 transition hover:bg-terra hover:text-white md:opacity-0 md:focus-visible:opacity-100 md:group-hover:opacity-100">
               <BagIcon />
             </button>
             {quickOpen && (
-              <div className="absolute inset-x-2.5 bottom-16 flex flex-col gap-2 rounded bg-areia-50 p-2.5 shadow">
+              <div className="absolute inset-x-3 bottom-16 flex flex-col gap-2.5 rounded-sm bg-areia-50 p-3 shadow-[0_8px_24px_rgba(42,31,22,0.18)]">
                 {colors.length > 1 && (
                   <div role="group" aria-label="Escolha a cor" className="flex gap-1.5">
                     {colors.map((c) => (
@@ -87,10 +87,10 @@ export function ProductCard({ product, priority = false }: { product: Product; p
       </div>
 
       <div className="flex flex-col gap-1">
-        <h3 className="text-sm text-tinta"><Link href={`/produto/${product.id}`}>{product.name}</Link></h3>
-        <p className="font-medium">{brl(product.price)}</p>
-        <p className="text-xs text-tinta/70">
-          {MAX_INSTALLMENTS}x de {brl(product.price / MAX_INSTALLMENTS)} sem juros · <span className="text-mar">{brl(product.price * (1 - PIX_DISCOUNT))} no PIX</span>
+        <h3 className="text-[15px] text-tinta"><Link href={`/produto/${product.id}`}>{product.name}</Link></h3>
+        <p className="font-medium text-tinta">{brl(product.price)}</p>
+        <p className="text-sm text-tinta/60">
+          {MAX_INSTALLMENTS}x de {brl(product.price / MAX_INSTALLMENTS)} · <span className="text-mar">{brl(product.price * (1 - PIX_DISCOUNT))} no Pix</span>
         </p>
       </div>
     </article>
