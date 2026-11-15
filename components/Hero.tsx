@@ -1,15 +1,14 @@
 'use client';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const HEROES = [
+const SLIDES = [
   {
     kicker: 'Coleção verão',
     title: 'Pele no sol,\npés n’areia.',
     body: 'Biquínis e maiôs modelados pra se mover com você — do mergulho ao fim de tarde.',
     cta: 'Ver coleção',
     href: '/categoria/lancamentos',
-    sky: 'radial-gradient(130% 100% at 15% 100%, #FFB238 0%, #FF5B3C 38%, #B8311A 62%, #0B2436 100%)',
   },
   {
     kicker: 'Maiôs · peça única',
@@ -17,7 +16,6 @@ const HEROES = [
     body: 'Caimento sem marcas, tecido que não desbota e proteção UV50+ em cada peça.',
     cta: 'Ver maiôs',
     href: '/categoria/maios',
-    sky: 'radial-gradient(130% 100% at 85% 100%, #FFB238 0%, #FF5B3C 36%, #93301B 64%, #061722 100%)',
   },
   {
     kicker: 'Só esta semana',
@@ -25,58 +23,75 @@ const HEROES = [
     body: 'Até 15% off em peças selecionadas enquanto durar o estoque.',
     cta: 'Ver promoções',
     href: '/categoria/promocoes',
-    sky: 'radial-gradient(130% 100% at 15% 100%, #FFCF6B 0%, #FF5B3C 40%, #0B2436 100%)',
   },
 ];
 
+const ROTATE_MS = 5500;
+
 /**
- * Painéis em scroll-snap horizontal — no touch, dá pra arrastar com o dedo
- * como num carrossel de app de verdade, não só esperar o timer ou acertar
- * uma bolinha minúscula. O título sangra até a borda esquerda da tela
- * (sem padding simétrico) pra parecer recorte editorial, não um cartão
- * centralizado genérico.
+ * O hero deixou de ser três painéis de cor que o visitante tinha que
+ * arrastar — agora é um único vídeo de fundo (gerado especialmente pra
+ * marca: sol, luz e mar, num loop perfeito de 8s, sem repetição visível)
+ * com um painel de vidro (glass) sobrepondo a mensagem. O texto alterna
+ * sozinho a cada ~5,5s com um fade — um único momento de movimento
+ * orquestrado, em vez de animação espalhada pela página. Os pontinhos
+ * embaixo continuam clicáveis pra quem quiser pular direto pra uma oferta.
  */
 export function Hero() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
-  const onScroll = () => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    setActive(Math.round(el.scrollLeft / el.clientWidth));
-  };
+  useEffect(() => {
+    const id = setInterval(() => setActive((v) => (v + 1) % SLIDES.length), ROTATE_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  const slide = SLIDES[active];
 
   return (
-    <section aria-label="Destaques" className="relative">
-      <div
-        ref={scrollerRef}
-        onScroll={onScroll}
-        className="no-scrollbar flex h-[78vh] max-h-[680px] min-h-[460px] snap-x snap-mandatory overflow-x-auto scroll-smooth"
+    <section aria-label="Destaques" className="relative h-[86vh] max-h-[760px] min-h-[520px] overflow-hidden bg-mar-700">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        poster="/video/hero-poster.jpg"
+        className="absolute inset-0 h-full w-full object-cover"
       >
-        {HEROES.map((hero) => (
-          <div key={hero.title} className="relative flex h-full w-full shrink-0 snap-center items-end overflow-hidden">
-            <div className="absolute inset-0" style={{ background: hero.sky }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-mar-700/70 via-transparent to-transparent" />
+        <source src="/video/hero-video.webm" type="video/webm" />
+        <source src="/video/hero-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-t from-mar-700/85 via-mar-700/15 to-mar-700/35" />
 
-            <div className="relative flex w-full flex-col gap-3 py-12 pl-5 pr-8 md:py-16 md:pl-10">
-              <span className="text-[13px] font-medium text-areia-50/80">{hero.kicker}</span>
-              <h1 className="whitespace-pre-line text-pretty font-display text-[56px] italic leading-[0.96] text-areia-50 md:text-[104px]">
-                {hero.title}
-              </h1>
-              <p className="max-w-[300px] text-[15px] leading-relaxed text-areia-50/85 md:max-w-sm">{hero.body}</p>
-              <Link href={hero.href}
-                className="mt-2 inline-flex h-[50px] w-fit items-center bg-areia-50 px-7 text-sm font-semibold text-tinta transition hover:bg-white">
-                {hero.cta}
-              </Link>
-            </div>
-          </div>
-        ))}
+      <div className="relative flex h-full w-full items-end px-5 pb-16 md:items-center md:px-10 md:pb-0">
+        <div
+          key={active}
+          className="w-full max-w-[420px] animate-[heroFade_0.6s_ease-out] rounded-sm border border-sol/25 bg-mar-700/55 p-6 shadow-glow backdrop-blur-md md:max-w-[460px] md:p-8"
+        >
+          <span className="text-[13px] font-medium text-sol/90">{slide.kicker}</span>
+          <h1 className="mt-2 whitespace-pre-line text-pretty font-display text-[42px] italic leading-[0.98] text-areia-50 md:text-[64px]">
+            {slide.title}
+          </h1>
+          <p className="mt-3 max-w-[320px] text-[15px] leading-relaxed text-areia-50/80">{slide.body}</p>
+          <Link
+            href={slide.href}
+            className="mt-5 inline-flex h-[48px] w-fit items-center border border-sol/40 bg-areia-50 px-7 text-sm font-semibold text-tinta transition hover:-translate-y-0.5 hover:shadow-glow"
+          >
+            {slide.cta}
+          </Link>
+        </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center gap-1.5">
-        {HEROES.map((h, i) => (
-          <span key={h.title} aria-hidden className="h-1 rounded-full bg-areia-50 transition-all duration-300"
-            style={{ width: i === active ? 24 : 7, opacity: i === active ? 1 : 0.45 }} />
+      <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5 md:bottom-7">
+        {SLIDES.map((s, i) => (
+          <button
+            key={s.title}
+            type="button"
+            aria-label={`Ver destaque ${i + 1}`}
+            aria-current={i === active}
+            onClick={() => setActive(i)}
+            className="h-1 rounded-full bg-sol transition-all duration-300"
+            style={{ width: i === active ? 26 : 7, opacity: i === active ? 1 : 0.4 }}
+          />
         ))}
       </div>
     </section>

@@ -11,19 +11,18 @@
 
 body {
   -webkit-font-smoothing: antialiased;
-  background-color: #FAF8F5;
+  background-color: #FAFAF8;
 }
 
 ::selection {
-  background-color: #15171B;
-  color: #FAF8F5;
+  background-color: #0C0D10;
+  color: #FAFAF8;
 }
 
 /* Foco visível e consistente em qualquer elemento navegável por teclado —
-   sem isso, o navegador usa o retângulo azul padrão, que destoa da marca
-   e some em alguns componentes com outline:none aplicado via Tailwind. */
+   champagne em vez do coral antigo, pra combinar com o novo acento "premium". */
 :focus-visible {
-  outline: 2px solid #FF5B3C;
+  outline: 2px solid #C9A24B;
   outline-offset: 2px;
 }
 
@@ -36,6 +35,13 @@ body {
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Fade do painel de texto do Hero ao trocar de slide — o único momento de
+   entrada animada da página, de propósito (ver Hero.tsx). */
+@keyframes heroFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

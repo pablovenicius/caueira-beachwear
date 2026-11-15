@@ -85,7 +85,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     {colors.map((c) => (
                       <button key={c.name} type="button" title={c.name} aria-pressed={activeColor?.name === c.name}
                         onClick={() => { setSelectedColor(c.name); setSelectedSize(null); }}
-                        className={`h-9 w-9 rounded-full border-2 ${activeColor?.name === c.name ? 'border-tinta' : 'border-transparent'}`}
+                        className={`h-9 w-9 rounded-full border-2 ${activeColor?.name === c.name ? 'border-sol-700' : 'border-transparent'}`}
                         style={{ backgroundColor: c.hex }} />
                     ))}
                   </div>

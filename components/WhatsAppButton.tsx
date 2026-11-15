@@ -11,7 +11,7 @@ export function WhatsAppButton({ hideOnMobile = false }: { hideOnMobile?: boolea
       target="_blank"
       rel="noreferrer"
       aria-label="Falar no WhatsApp"
-      className={`fixed bottom-[calc(var(--bottom-nav-h)+16px)] right-4 z-20 grid h-14 w-14 place-items-center rounded-full bg-mar text-white shadow-[0_6px_20px_rgba(11,36,54,0.3)] transition hover:bg-mar-700 md:bottom-6 md:right-6 ${
+      className={`fixed bottom-[calc(var(--bottom-nav-h)+16px)] right-4 z-20 grid h-14 w-14 place-items-center rounded-full border border-sol/25 bg-mar text-white shadow-glow transition hover:bg-mar-700 md:bottom-6 md:right-6 ${
         hideOnMobile ? 'max-md:hidden' : ''
       }`}
     >

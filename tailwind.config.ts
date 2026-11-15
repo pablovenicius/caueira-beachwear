@@ -1,29 +1,30 @@
 import type { Config } from 'tailwindcss';
 
-// Reformulação completa (nov/2026): a paleta anterior (cream + argila + verde,
-// serif clássica) media como "mais um e-commerce feito por IA" — exatamente o
-// clichê que a direção de design evita. Nova direção: papel quase-branco frio,
-// tinta grafite-azulada (não mais marrom), um único acento vívido (coral-sol,
-// "flare") usado só em preço/CTA/promoção, e um azul-noite profundo pros
-// blocos de contraste (rodapé, nav inferior). Os NOMES dos tokens continuam
-// os mesmos de antes — isso é proposital: todo o painel admin, checkout,
-// modais etc. herdam a nova identidade automaticamente, sem precisar tocar
-// nesses arquivos (cascata de token do Tailwind).
+// Segunda reformulação (nov/2026): a direção anterior (papel frio + coral-sol
+// vívido) ainda lia como "e-commerce bonito", mas o pedido agora é outro —
+// elegante, moderno, com tecnologia, refinado. Trocamos o acento quente e
+// saturado por um par mais contido: champagne metálico (sol) fazendo o
+// trabalho de destaque "premium/tech" (bordas, foco, glass), e uma terracota
+// escurecida e dessaturada (terra) reservada estritamente a preço/CTA — o
+// mesmo papel que tinha antes, só mais discreta. "mar" deixa de ser azul-noite
+// e passa a ser um petróleo bem mais escuro e frio ("abyss"), base de todo
+// glassmorphism (hero, rodapé, nav flutuante). Os NOMES dos tokens continuam
+// os mesmos — cascata automática pro admin, checkout, modais etc.
 export default {
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        // acento vívido — preço no Pix, selos de promoção, CTA principal
-        terra: { DEFAULT: '#FF5B3C', 100: '#FFE4DC', 700: '#B8311A' },
-        // acento quente secundário — pouco usado, só pra pontuar (favicon, detalhe de ícone)
-        sol: { DEFAULT: '#FFB238', 100: '#FFEFD2', 700: '#92591A' },
-        // neutros "papel" — frios, quase brancos, substituem o bege antigo
-        areia: { 50: '#FAF8F5', 100: '#F2EEE7', 200: '#E6E0D6', 300: '#D7CFC0' },
-        // texto e chrome — grafite-azulado, não mais marrom
-        tinta: '#15171B',
-        // bloco de contraste total — azul-noite profundo (rodapé, nav mobile, seções cheias)
-        mar: { DEFAULT: '#0B2436', 100: '#DCE4E8', 700: '#061722' },
+        // terracota escurecida/dessaturada — só preço no Pix, CTA e selos de promoção
+        terra: { DEFAULT: '#B8472E', 100: '#F1DDD3', 700: '#7A2E1C' },
+        // champagne metálico — o acento "premium/tech": bordas no hover, foco, glow de preço
+        sol: { DEFAULT: '#C9A24B', 100: '#F2E7CC', 700: '#7F611F' },
+        // neutros "papel" — porcelana fria, mais branca e mais neutra que antes
+        areia: { 50: '#FAFAF8', 100: '#F2F0EB', 200: '#E4E1D9', 300: '#D2CDC0' },
+        // texto e chrome — grafite quase-preto, mais frio e mais denso
+        tinta: '#0C0D10',
+        // "abyss" — petróleo profundo, base do glass (hero, rodapé, nav flutuante)
+        mar: { DEFAULT: '#0B1620', 100: '#DEE4E8', 700: '#050B11' },
       },
       fontFamily: {
         // Fraunces: serif contemporânea de alto contraste — manchetes editoriais,
@@ -36,8 +37,11 @@ export default {
       aspectRatio: { product: '4 / 5' },
       maxWidth: { prose: '62ch' },
       boxShadow: {
-        sheet: '0 -8px 30px rgba(11,36,54,0.18)',
+        sheet: '0 -8px 30px rgba(11,22,32,0.22)',
+        // glow sutil em champagne — usado só no painel do hero e no CTA em hover
+        glow: '0 0 0 1px rgba(201,162,75,0.35), 0 12px 40px rgba(5,11,17,0.35)',
       },
+      backdropBlur: { xs: '2px' },
     },
   },
   plugins: [],

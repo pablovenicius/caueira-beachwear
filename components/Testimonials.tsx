@@ -25,9 +25,9 @@ export function Testimonials() {
           </div>
           <div className="flex gap-2">
             <button aria-label="Avaliação anterior" onClick={() => scroll(-1)}
-              className="grid h-11 w-11 place-items-center rounded-full border border-areia-300 text-lg text-tinta/70 hover:border-tinta">‹</button>
+              className="grid h-11 w-11 place-items-center rounded-full border border-areia-300 text-lg text-tinta/70 transition hover:border-sol-700 hover:text-sol-700">‹</button>
             <button aria-label="Próxima avaliação" onClick={() => scroll(1)}
-              className="grid h-11 w-11 place-items-center rounded-full border border-areia-300 text-lg text-tinta/70 hover:border-tinta">›</button>
+              className="grid h-11 w-11 place-items-center rounded-full border border-areia-300 text-lg text-tinta/70 transition hover:border-sol-700 hover:text-sol-700">›</button>
           </div>
         </div>
 

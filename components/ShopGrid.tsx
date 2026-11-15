@@ -47,7 +47,7 @@ export function ShopGrid({
           return (
             <button key={f} type="button" aria-pressed={on} onClick={() => setPiece(f)}
               className={`h-9 flex-none whitespace-nowrap rounded-full border px-4 text-[13px] font-medium transition ${
-                on ? 'border-terra bg-terra text-white' : 'border-areia-300 bg-white text-tinta/70 hover:border-tinta'
+                on ? 'border-terra bg-terra text-white' : 'border-areia-300 bg-white text-tinta/70 hover:border-sol-700'
               }`}>
               {f}
             </button>

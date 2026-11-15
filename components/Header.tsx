@@ -32,11 +32,11 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 bg-areia-50/95 backdrop-blur">
-      <p className="bg-tinta py-1.5 text-center text-[12px] text-areia-50/90">
+      <p className="bg-mar-700 py-1.5 text-center text-[12px] text-sol/90">
         Frete grátis acima de R$ 399 · 5% off no Pix
       </p>
 
-      <div className="border-b border-areia-200">
+      <div className="border-b border-sol/15">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:px-6">
           <button
             type="button"
@@ -48,7 +48,7 @@ export function Header() {
           </button>
 
           <Link href="/" aria-label="Caueira Beachwear — início" className="mx-auto md:mx-0">
-            <Logo />
+            <Logo size={46} />
           </Link>
 
           <nav aria-label="Categorias" className="hidden flex-1 justify-center gap-1 md:flex">
@@ -56,7 +56,7 @@ export function Header() {
               <Link
                 key={n.label}
                 href={n.href}
-                className={`whitespace-nowrap rounded-full px-3.5 py-2 text-[14px] font-medium transition hover:bg-areia-100 ${
+                className={`whitespace-nowrap rounded-full px-3.5 py-2 text-[14px] font-medium transition hover:bg-sol/10 ${
                   n.accent ? 'text-terra' : 'text-tinta/70'
                 }`}
               >
@@ -66,7 +66,7 @@ export function Header() {
           </nav>
 
           <div className="ml-auto flex items-center gap-0.5 md:ml-0">
-            <label className="mr-1 hidden h-10 w-56 items-center gap-2 rounded-full border border-areia-200 bg-white px-3.5 lg:flex">
+            <label className="mr-1 hidden h-10 w-56 items-center gap-2 rounded-full border border-areia-200 bg-white px-3.5 transition focus-within:border-sol/50 lg:flex">
               <SearchIcon />
               <input
                 aria-label="Buscar produtos"
@@ -82,18 +82,18 @@ export function Header() {
                   aria-haspopup="menu"
                   aria-expanded={menuOpen}
                   onClick={() => setMenuOpen((v) => !v)}
-                  className="grid h-10 w-10 place-items-center text-tinta hover:text-terra"
+                  className="grid h-10 w-10 place-items-center text-tinta hover:text-sol-700"
                 >
                   <UserIcon />
                 </button>
               ) : (
-                <button aria-label="Entrar ou criar conta" onClick={() => setAuthOpen(true)} className="grid h-10 w-10 place-items-center text-tinta hover:text-terra">
+                <button aria-label="Entrar ou criar conta" onClick={() => setAuthOpen(true)} className="grid h-10 w-10 place-items-center text-tinta hover:text-sol-700">
                   <UserIcon />
                 </button>
               )}
 
               {menuOpen && user && (
-                <div role="menu" className="absolute right-0 top-11 w-56 rounded-md bg-white p-2 text-sm shadow-lg ring-1 ring-tinta/5">
+                <div role="menu" className="absolute right-0 top-11 w-56 rounded-md bg-white p-2 text-sm shadow-lg ring-1 ring-sol/15">
                   <p className="truncate px-3 py-2 text-tinta/50">{user.email}</p>
                   <Link role="menuitem" href="/minha-conta/pedidos" onClick={() => setMenuOpen(false)}
                     className="block rounded px-3 py-2.5 text-tinta hover:bg-areia-100">
@@ -120,7 +120,7 @@ export function Header() {
             </div>
 
             <button aria-label={`Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}`} onClick={() => setOpen(true)}
-              className="relative grid h-10 w-10 place-items-center text-tinta hover:text-terra">
+              className="relative grid h-10 w-10 place-items-center text-tinta hover:text-sol-700">
               <BagIcon />
               {count > 0 && (
                 <span className="absolute right-0 top-0 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-terra px-1 text-[10px] font-bold text-white">
@@ -150,7 +150,7 @@ export function Header() {
           <button aria-label="Fechar" className="absolute inset-0 bg-tinta/40" onClick={() => setSheetOpen(false)} />
           <div className="absolute inset-y-0 left-0 flex w-[82%] max-w-xs flex-col gap-1 bg-areia-50 p-5 shadow-2xl">
             <div className="mb-3 flex items-center justify-between">
-              <Logo />
+              <Logo size={52} />
               <button aria-label="Fechar categorias" onClick={() => setSheetOpen(false)} className="grid h-9 w-9 place-items-center text-tinta/60">
                 <CloseIcon />
               </button>

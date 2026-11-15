@@ -30,7 +30,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
 
   return (
     <article className="group relative flex min-w-0 flex-col gap-2.5">
-      <div className="relative aspect-product overflow-hidden bg-areia-200">
+      <div className="relative aspect-product overflow-hidden bg-areia-200 outline outline-1 -outline-offset-1 outline-transparent transition-[outline-color] duration-300 group-hover:outline-sol/50">
         <Link href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`}>
           {product.image_url ? (
             <Image src={product.image_url} alt={product.name} fill priority={priority}
@@ -42,7 +42,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         </Link>
 
         {product.tag && (
-          <span className="absolute left-2.5 top-2.5 bg-areia-50 px-2.5 py-1 text-[11px] font-semibold text-tinta/80">
+          <span className="absolute left-2.5 top-2.5 bg-mar-700/90 px-2.5 py-1 text-[11px] font-semibold text-sol backdrop-blur-sm">
             {product.tag}
           </span>
         )}
@@ -52,7 +52,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         ) : (
           <button type="button" onClick={() => setQuickOpen(true)}
             aria-label={`Compra rápida: ${product.name}`}
-            className="absolute bottom-2.5 right-2.5 grid h-10 w-10 place-items-center rounded-full bg-areia-50 text-tinta opacity-100 shadow-sm transition hover:bg-terra hover:text-white md:opacity-0 md:focus-visible:opacity-100 md:group-hover:opacity-100">
+            className="absolute bottom-2.5 right-2.5 grid h-10 w-10 place-items-center rounded-full border border-sol/25 bg-mar-700/80 text-areia-50 opacity-100 backdrop-blur-sm transition hover:bg-mar-700 hover:text-sol md:opacity-0 md:focus-visible:opacity-100 md:group-hover:opacity-100">
             <BagIcon />
           </button>
         )}
@@ -85,7 +85,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
                 {colors.map((c) => (
                   <button key={c.name} type="button" title={c.name} aria-pressed={activeColor?.name === c.name}
                     onClick={() => setSelectedColor(c.name)}
-                    className={`h-8 w-8 rounded-full border-2 md:h-7 md:w-7 ${activeColor?.name === c.name ? 'border-tinta' : 'border-transparent'}`}
+                    className={`h-8 w-8 rounded-full border-2 md:h-7 md:w-7 ${activeColor?.name === c.name ? 'border-sol-700' : 'border-transparent'}`}
                     style={{ backgroundColor: c.hex }} />
                 ))}
               </div>
@@ -96,7 +96,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
                 return (
                   <button key={s} disabled={stock === 0}
                     onClick={() => { if (activeColor) { add(product, s, activeColor.name); setQuickOpen(false); } }}
-                    className="h-12 flex-1 border border-areia-300 text-sm font-semibold hover:border-tinta disabled:cursor-not-allowed disabled:opacity-30 md:h-11">
+                    className="h-12 flex-1 border border-areia-300 text-sm font-semibold transition hover:border-sol-700 disabled:cursor-not-allowed disabled:opacity-30 md:h-11">
                     {s}
                   </button>
                 );
