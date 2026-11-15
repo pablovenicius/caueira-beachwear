@@ -121,7 +121,7 @@ export function ProductDetail({ product }: { product: Product }) {
                               md:static md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
                 <div className="mx-auto flex max-w-6xl items-center gap-3 md:max-w-none md:p-0">
                   <button type="button" onClick={handleAdd} disabled={!selectedSize}
-                    className="h-14 w-full bg-terra text-sm font-semibold text-white transition hover:bg-terra-700 disabled:cursor-not-allowed disabled:opacity-40">
+                    className="h-14 w-full rounded-full bg-terra text-sm font-semibold text-white transition hover:bg-terra-700 disabled:cursor-not-allowed disabled:opacity-40">
                     {selectedSize ? 'Adicionar à sacola' : 'Escolha um tamanho'}
                   </button>
                 </div>

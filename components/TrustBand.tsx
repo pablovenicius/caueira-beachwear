@@ -1,42 +1,28 @@
-const POINTS = [
-  {
-    title: 'Frete grátis acima de R$ 399',
-    body: 'Calculado automaticamente no fechamento do pedido.',
-  },
-  {
-    title: 'Troca grátis em até 30 dias',
-    body: 'Não serviu ou não era bem o que você esperava? Trocamos sem custo.',
-  },
-  {
-    title: '5% de desconto no Pix',
-    body: 'Ou em até 3x sem juros no cartão, do jeito que preferir pagar.',
-  },
+const STATS = [
+  { value: '+50', label: 'mil clientes satisfeitas' },
+  { value: '30', label: 'dias pra trocar sem custo' },
+  { value: '5%', label: 'de desconto à vista no Pix' },
+  { value: 'UV50+', label: 'de proteção em cada peça' },
 ];
 
 /**
- * O único bloco de cor cheia da página — todo o resto da loja fica em tons
- * claros de areia, então este respiro escuro é o momento "de revista" entre
- * a vitrine e as avaliações.
+ * Referência do cliente (site da Bautz): em vez do bloco de cor cheia que
+ * a loja tinha antes, uma faixa clara com números grandes em serifada —
+ * o mesmo recurso que a Bautz usa pra credibilidade ("+50 anos de mercado").
  */
 export function TrustBand() {
   return (
-    <section aria-label="Por que comprar na Caueira" className="border-y border-sol/15 bg-mar-700 py-16 text-areia-50">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 md:grid-cols-[1fr_1fr] md:gap-16">
-        <div className="flex flex-col gap-4">
-          <p className="font-display text-pretty text-3xl italic leading-tight md:text-4xl">
-            Peças pensadas pra um dia inteiro de sol, água salgada e areia — sem perder a forma.
-          </p>
-          <p className="max-w-prose text-[15px] leading-relaxed text-areia-50/80">
-            Cada biquíni e maiô passa por três lavagens de teste antes de chegar na loja. Se alguma peça não
-            aguentar o seu verão, a troca é por nossa conta.
-          </p>
-        </div>
+    <section aria-label="Por que comprar na Caueira" className="border-y border-areia-200 bg-areia-100 py-14">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="mx-auto mb-10 max-w-2xl text-pretty text-center font-display text-2xl text-tinta md:text-3xl">
+          Peças pensadas pra um dia inteiro de sol, água salgada e areia — sem perder a forma.
+        </p>
 
-        <dl className="flex flex-col gap-6">
-          {POINTS.map((p) => (
-            <div key={p.title} className="border-t border-areia-50/20 pt-5 first:border-t-0 first:pt-0">
-              <dt className="text-lg">{p.title}</dt>
-              <dd className="mt-1 text-sm leading-relaxed text-areia-50/75">{p.body}</dd>
+        <dl className="grid grid-cols-2 gap-y-8 md:grid-cols-4 md:gap-6">
+          {STATS.map((s) => (
+            <div key={s.label} className="flex flex-col items-center gap-1.5 text-center">
+              <dt className="font-display text-4xl text-terra md:text-5xl">{s.value}</dt>
+              <dd className="max-w-[12ch] text-[13px] leading-snug text-mar">{s.label}</dd>
             </div>
           ))}
         </dl>

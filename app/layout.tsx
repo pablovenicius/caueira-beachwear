@@ -13,7 +13,7 @@ const fraunces = Fraunces({
 const archivo = Archivo({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-archivo', display: 'swap' });
 
 export const viewport: Viewport = {
-  themeColor: '#0C0D10',
+  themeColor: '#1F4A4D',
   width: 'device-width',
   initialScale: 1,
 };

@@ -11,18 +11,18 @@
 
 body {
   -webkit-font-smoothing: antialiased;
-  background-color: #FAFAF8;
+  background-color: #FBF8F2;
 }
 
 ::selection {
-  background-color: #0C0D10;
-  color: #FAFAF8;
+  background-color: #1F4A4D;
+  color: #FBF8F2;
 }
 
 /* Foco visível e consistente em qualquer elemento navegável por teclado —
-   champagne em vez do coral antigo, pra combinar com o novo acento "premium". */
+   caramelo, combinando com a nova direção editorial (ref. Bautz). */
 :focus-visible {
-  outline: 2px solid #C9A24B;
+  outline: 2px solid #C17F4A;
   outline-offset: 2px;
 }
 
