@@ -47,6 +47,17 @@ export async function getAllProducts(): Promise<Product[]> {
   return (data ?? []).map(mapProduct);
 }
 
+/**
+ * Um produto específico, com as variações aninhadas.
+ * Usado em app/produto/[id]/page.tsx (página de detalhe) — devolve null
+ * se o id não existir, pra página chamar notFound().
+ */
+export async function getProductById(id: string): Promise<Product | null> {
+  const { data, error } = await supabase.from('products').select(PRODUCT_SELECT).eq('id', id).maybeSingle();
+  if (error) throw error;
+  return data ? mapProduct(data) : null;
+}
+
 export async function createProduct(input: ProductInput, variants: VariantInput[]): Promise<Product> {
   const { data: product, error } = await supabase.from('products').insert(input).select().single();
   if (error) throw error;

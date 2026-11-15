@@ -22,6 +22,11 @@ function isSameMonth(iso: string, ref: Date) {
   return d.getFullYear() === ref.getFullYear() && d.getMonth() === ref.getMonth();
 }
 
+/** Valor que realmente entra no caixa — já com o desconto do cupom aplicado. */
+function orderTotal(o: Order): number {
+  return typeof o.total === 'number' ? o.total : o.subtotal;
+}
+
 export function SalesPanel() {
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [loadErr, setLoadErr] = useState('');
@@ -47,10 +52,10 @@ export function SalesPanel() {
     const list = orders ?? [];
     const now = new Date();
     const paid = list.filter((o) => o.status === 'paid');
-    const todayRevenue = paid.filter((o) => isSameDay(o.created_at, now)).reduce((t, o) => t + o.subtotal, 0);
-    const monthRevenue = paid.filter((o) => isSameMonth(o.created_at, now)).reduce((t, o) => t + o.subtotal, 0);
+    const todayRevenue = paid.filter((o) => isSameDay(o.created_at, now)).reduce((t, o) => t + orderTotal(o), 0);
+    const monthRevenue = paid.filter((o) => isSameMonth(o.created_at, now)).reduce((t, o) => t + orderTotal(o), 0);
     const pendingCount = list.filter((o) => o.status === 'pending').length;
-    const avgTicket = paid.length ? paid.reduce((t, o) => t + o.subtotal, 0) / paid.length : 0;
+    const avgTicket = paid.length ? paid.reduce((t, o) => t + orderTotal(o), 0) / paid.length : 0;
     return { todayRevenue, monthRevenue, pendingCount, paidCount: paid.length, avgTicket, totalCount: list.length };
   }, [orders]);
 
@@ -142,7 +147,12 @@ export function SalesPanel() {
                 </span>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="font-medium text-tinta">{brl(o.subtotal)}</span>
+                <div className="flex flex-col items-end">
+                  <span className="font-medium text-tinta">{brl(orderTotal(o))}</span>
+                  {o.coupon_code && (
+                    <span className="text-[11px] text-tinta/50">cupom {o.coupon_code} (-{brl(o.discount)})</span>
+                  )}
+                </div>
                 <select
                   aria-label={`Status do pedido de ${o.shipping_name}`}
                   value={o.status}
