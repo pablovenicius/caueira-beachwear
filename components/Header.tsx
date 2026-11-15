@@ -42,7 +42,7 @@ export function Header() {
             type="button"
             aria-label="Abrir categorias"
             onClick={() => setSheetOpen(true)}
-            className="grid h-10 w-10 shrink-0 place-items-center text-tinta md:hidden"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-terra/30 text-tinta md:hidden"
           >
             <MenuIcon />
           </button>
