@@ -180,7 +180,7 @@ export function AdminPanel({ initialProducts }: { initialProducts: Product[] }) 
   };
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-8">
+    <div className="flex flex-col gap-5 py-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-normal text-tinta">Painel do lojista</h1>

@@ -51,6 +51,48 @@ export interface Profile {
   created_at: string;
 }
 
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'cancelled';
+
+export const ORDER_STATUSES: OrderStatus[] = ['pending', 'paid', 'failed', 'cancelled'];
+
+export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+  pending: 'Aguardando pagamento',
+  paid: 'Pago',
+  failed: 'Falhou',
+  cancelled: 'Cancelado',
+};
+
+/** Espelha `order_items` — um snapshot do item no momento da compra (nome e preço não mudam se o produto mudar depois). */
+export interface OrderItem {
+  id: string;
+  order_id: string;
+  product_id: string;
+  variant_id: string | null;
+  name: string;
+  size: Size;
+  color_name: string;
+  unit_price: number;
+  qty: number;
+}
+
+/** Espelha `orders`, com os itens já aninhados (join feito em lib/supabase.ts). Usado na aba Vendas do painel admin. */
+export interface Order {
+  id: string;
+  customer_id: string;
+  status: OrderStatus;
+  subtotal: number;
+  shipping_name: string;
+  shipping_phone: string;
+  shipping_cep: string;
+  shipping_address: string;
+  shipping_city: string;
+  shipping_state: string;
+  mp_preference_id: string | null;
+  mp_payment_id: string | null;
+  created_at: string;
+  items: OrderItem[];
+}
+
 export const FREE_SHIPPING_THRESHOLD = 399;
 export const PIX_DISCOUNT = 0.05;
 export const MAX_INSTALLMENTS = 3;

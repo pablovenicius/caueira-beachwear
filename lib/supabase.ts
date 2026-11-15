@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Product, ProductInput, ProductVariant, VariantInput } from '@/types/product';
+import type { Order, OrderItem, OrderStatus, Product, ProductInput, ProductVariant, VariantInput } from '@/types/product';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -149,4 +149,38 @@ export async function uploadProductImage(file: File): Promise<string> {
 
   const { data } = supabase.storage.from('product-images').getPublicUrl(path);
   return data.publicUrl;
+}
+
+// ---------------------------------------------------------------------------
+// Pedidos (aba "Vendas" do painel do lojista)
+// ---------------------------------------------------------------------------
+
+const ORDER_SELECT = '*, order_items(*)';
+
+type OrderRow = Omit<Order, 'items'> & { order_items?: OrderItem[] | null };
+
+function mapOrder(row: OrderRow): Order {
+  return { ...row, items: row.order_items ?? [] };
+}
+
+/**
+ * Todos os pedidos, do mais recente pro mais antigo. Só retorna algo se
+ * quem está logado estiver em public.admins (migration 008) — um cliente
+ * comum recebe lista vazia por causa da RLS, nunca um erro.
+ */
+export async function getOrders(): Promise<Order[]> {
+  const { data, error } = await supabase.from('orders').select(ORDER_SELECT).order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(mapOrder);
+}
+
+/**
+ * Corrige manualmente o status de um pedido (ex.: marcar como cancelado,
+ * ou corrigir um pedido que ficou "pending" porque o webhook do Mercado
+ * Pago não chegou a avisar). O fluxo normal (pending → paid/failed) é
+ * automático, feito pelo próprio webhook.
+ */
+export async function updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
+  const { error } = await supabase.from('orders').update({ status }).eq('id', orderId);
+  if (error) throw error;
 }

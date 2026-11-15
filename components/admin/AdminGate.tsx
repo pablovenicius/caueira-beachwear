@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
 import { AdminPanel } from '@/components/admin/AdminPanel';
+import { SalesPanel } from '@/components/admin/SalesPanel';
 import type { Product } from '@/types/product';
 
 /**
@@ -14,6 +15,7 @@ import type { Product } from '@/types/product';
 export function AdminGate({ initialProducts }: { initialProducts: Product[] }) {
   const { user, loading, isAdmin, adminLoading, signOut } = useAuth();
   const [authOpen, setAuthOpen] = useState(true);
+  const [tab, setTab] = useState<'produtos' | 'vendas'>('produtos');
 
   if (loading || (user && adminLoading)) {
     return (
@@ -59,5 +61,32 @@ export function AdminGate({ initialProducts }: { initialProducts: Product[] }) {
     );
   }
 
-  return <AdminPanel initialProducts={initialProducts} />;
+  return (
+    <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 pt-6">
+      <div className="flex gap-1 border-b border-areia-300">
+        <button
+          type="button"
+          onClick={() => setTab('produtos')}
+          className={`h-11 border-b-2 px-4 text-sm font-medium ${tab === 'produtos' ? 'border-terra text-tinta' : 'border-transparent text-tinta/50 hover:text-tinta/80'}`}
+        >
+          Produtos
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab('vendas')}
+          className={`h-11 border-b-2 px-4 text-sm font-medium ${tab === 'vendas' ? 'border-terra text-tinta' : 'border-transparent text-tinta/50 hover:text-tinta/80'}`}
+        >
+          Vendas
+        </button>
+      </div>
+
+      {tab === 'produtos' ? (
+        <AdminPanel initialProducts={initialProducts} />
+      ) : (
+        <div className="pb-8">
+          <SalesPanel />
+        </div>
+      )}
+    </div>
+  );
 }
