@@ -24,6 +24,13 @@ export default async function Home() {
   const biquinis = byCategory('Biquínis');
   const maios = byCategory('Maiôs');
 
+  // Sem uma segunda foto distinta, a colagem fica com um bloco neutro em vez de
+  // repetir a mesma imagem (e não duplicar a foto que já aparece em "Mais desejados").
+  const foto = (p?: (typeof products)[number]) =>
+    p?.image_url ? { src: p.image_url, alt: p.name } : null;
+  const fotoSecundaria = (lista: typeof products) =>
+    lista[1]?.image_url ? { src: lista[1].image_url, alt: lista[1].name } : null;
+
   return (
     <>
       <Header />
@@ -36,8 +43,8 @@ export default async function Home() {
           title="Conjuntos que acompanham cada movimento"
           body="Caimento estudado pra não marcar, tecido com proteção UV50+ e combinações de top e calcinha pensadas pra montar o seu jeito de usar."
           href="/categoria/biquinis"
-          mainImage={biquinis[0]?.image_url}
-          secondaryImage={biquinis[1]?.image_url ?? biquinis[0]?.image_url}
+          mainImage={foto(biquinis[0])}
+          secondaryImage={fotoSecundaria(biquinis)}
         />
 
         <ShopGrid title="Mais desejados" subtitle="Peças em destaque no momento" products={products} />
@@ -47,8 +54,8 @@ export default async function Home() {
           title="Peça única, caimento impecável"
           body="Sem marcas, sem desbotar — pensado pra quem passa o dia inteiro entre o sol e a água e quer se sentir bem em cada ângulo."
           href="/categoria/maios"
-          mainImage={maios[0]?.image_url}
-          secondaryImage={maios[1]?.image_url ?? maios[0]?.image_url}
+          mainImage={foto(maios[0])}
+          secondaryImage={fotoSecundaria(maios)}
           reverse
         />
 

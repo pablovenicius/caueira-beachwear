@@ -17,9 +17,9 @@ const NAV = [
 /**
  * Header mínimo e mobile-first: uma única linha (sacola, marca, busca/conta)
  * — nada de segunda fileira de navegação disputando espaço com a tela
- * pequena. As categorias moram na folha cheia que abre a partir do ícone de
- * menu, e também aparecem como chips roláveis logo abaixo, pra quem já sabe
- * o que quer sem precisar abrir nada. No desktop a busca aparece inline.
+ * pequena. No mobile as categorias moram na folha que abre pelo ícone de
+ * menu (a barra inferior já tem o atalho "Categorias"). No desktop a
+ * navegação e a busca aparecem inline.
  */
 export function Header() {
   const items = useCart((s) => s.items);
@@ -131,18 +131,6 @@ export function Header() {
           </div>
         </div>
 
-        <nav aria-label="Categorias (atalho)" className="no-scrollbar overflow-x-auto md:hidden">
-          <div className="flex gap-1 px-4 pb-2.5">
-            {NAV.map((n) => (
-              <Link key={n.label} href={n.href}
-                className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[13px] font-medium ${
-                  n.accent ? 'border-terra/30 text-terra' : 'border-areia-200 text-tinta/70'
-                }`}>
-                {n.label}
-              </Link>
-            ))}
-          </div>
-        </nav>
       </div>
 
       {sheetOpen && (

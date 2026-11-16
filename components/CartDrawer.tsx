@@ -49,7 +49,7 @@ export function CartDrawer() {
                 {items.map((it) => (
                   <li key={it.key} className="flex gap-4 py-4">
                     {it.image ? (
-                      <Image src={it.image} alt="" width={72} height={90} className="rounded-sm object-cover" />
+                      <Image src={it.image} alt={it.name} width={72} height={90} className="rounded-sm object-cover" />
                     ) : (
                       <div className="h-[90px] w-[72px] flex-none rounded-sm bg-areia-200" />
                     )}

@@ -22,8 +22,8 @@ export function CategoryShowcase({
   title: string;
   body: string;
   href: string;
-  mainImage?: string | null;
-  secondaryImage?: string | null;
+  mainImage?: { src: string; alt: string } | null;
+  secondaryImage?: { src: string; alt: string } | null;
   reverse?: boolean;
 }) {
   return (
@@ -32,14 +32,14 @@ export function CategoryShowcase({
         <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px]">
           <div className="absolute inset-0 right-10 top-0 overflow-hidden bg-areia-200">
             {mainImage ? (
-              <Image src={mainImage} alt="" fill sizes="(max-width: 768px) 70vw, 360px" className="object-cover" />
+              <Image src={mainImage.src} alt={mainImage.alt} fill sizes="(max-width: 768px) 70vw, 360px" className="object-cover" />
             ) : (
               <div className="h-full w-full bg-areia-300" />
             )}
           </div>
           <div className="absolute bottom-0 right-0 h-[58%] w-[52%] overflow-hidden border-4 border-areia-50 bg-areia-300 shadow-glow">
             {secondaryImage ? (
-              <Image src={secondaryImage} alt="" fill sizes="220px" className="object-cover" />
+              <Image src={secondaryImage.src} alt={secondaryImage.alt} fill sizes="220px" className="object-cover" />
             ) : (
               <div className="h-full w-full bg-areia-200" />
             )}

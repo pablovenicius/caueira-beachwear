@@ -129,8 +129,8 @@ export async function signOut() {
   if (error) throw error;
 }
 
-/** Login social — "google" e "facebook" precisam estar habilitados em Authentication → Providers no Supabase. */
-export async function signInWithOAuth(provider: 'google' | 'facebook') {
+/** Login social — "google", "apple" e "facebook" precisam estar habilitados em Authentication → Providers no Supabase. */
+export async function signInWithOAuth(provider: 'google' | 'apple' | 'facebook') {
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: { redirectTo: typeof window !== 'undefined' ? window.location.href : undefined },
