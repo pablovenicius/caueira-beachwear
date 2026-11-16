@@ -129,6 +129,24 @@ export async function signOut() {
   if (error) throw error;
 }
 
+/**
+ * Dispara o e-mail de "esqueci minha senha". O link aponta pra
+ * /redefinir-senha, onde a pessoa escolhe a nova senha (precisa estar na
+ * lista de Redirect URLs do Supabase — ver migrations/README de auth).
+ */
+export async function resetPasswordForEmail(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/redefinir-senha` : undefined,
+  });
+  if (error) throw error;
+}
+
+/** Troca a senha do usuário já autenticado (usado na página /redefinir-senha, depois do link do e-mail). */
+export async function updatePassword(newPassword: string) {
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) throw error;
+}
+
 /** Login social — "google" e "facebook" precisam estar habilitados em Authentication → Providers no Supabase. */
 export async function signInWithOAuth(provider: 'google' | 'facebook') {
   const { error } = await supabase.auth.signInWithOAuth({

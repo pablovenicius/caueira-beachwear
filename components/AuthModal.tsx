@@ -1,9 +1,9 @@
 'use client';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
-import { signInWithEmail, signInWithOAuth, signUpWithEmail } from '@/lib/supabase';
+import { resetPasswordForEmail, signInWithEmail, signInWithOAuth, signUpWithEmail } from '@/lib/supabase';
 
-type Mode = 'login' | 'register';
+type Mode = 'login' | 'register' | 'esqueci';
 
 export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const [mode, setMode] = useState<Mode>('login');
@@ -43,6 +43,23 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
     e.preventDefault();
     setErr('');
     setNotice('');
+
+    if (mode === 'esqueci') {
+      if (!email.trim()) {
+        setErr('Preencha seu e-mail.');
+        return;
+      }
+      setLoading(true);
+      try {
+        await resetPasswordForEmail(email.trim());
+        setNotice('Se esse e-mail tiver uma conta, enviamos um link para redefinir a senha.');
+      } catch (e) {
+        setErr(e instanceof Error ? traduzErro(e.message) : 'Algo deu errado. Tente novamente.');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
 
     if (!email.trim() || !password) {
       setErr('Preencha e-mail e senha.');
@@ -87,57 +104,63 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
         <Dialog.Overlay className="fixed inset-0 z-40 bg-tinta/40 data-[state=open]:animate-in data-[state=open]:fade-in" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded bg-areia-50 p-7 shadow-xl">
           <Dialog.Title className="font-display text-2xl font-normal text-tinta">
-            {mode === 'login' ? 'Entrar' : 'Criar conta'}
+            {mode === 'login' ? 'Entrar' : mode === 'register' ? 'Criar conta' : 'Redefinir senha'}
           </Dialog.Title>
           <Dialog.Description className="mt-1.5 text-sm text-tinta/70">
             {mode === 'login'
               ? 'Acesse sua conta Caueira para acompanhar pedidos e favoritos.'
-              : 'Leva menos de um minuto. Guarde seus dados para a próxima compra.'}
+              : mode === 'register'
+                ? 'Leva menos de um minuto. Guarde seus dados para a próxima compra.'
+                : 'Informe seu e-mail e enviaremos um link para você escolher uma nova senha.'}
           </Dialog.Description>
 
-          <div className="mt-5 flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => oauth('google')}
-              className="flex h-11 items-center justify-center gap-2.5 rounded-sm border border-areia-300 bg-white text-sm font-medium text-tinta transition hover:bg-areia-100"
-            >
-              <GoogleIcon /> Continuar com Google
-            </button>
-            <button
-              type="button"
-              onClick={() => oauth('facebook')}
-              className="flex h-11 items-center justify-center gap-2.5 rounded-sm border border-areia-300 bg-white text-sm font-medium text-tinta transition hover:bg-areia-100"
-            >
-              <FacebookIcon /> Continuar com Facebook
-            </button>
-          </div>
+          {mode !== 'esqueci' && (
+            <>
+              <div className="mt-5 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => oauth('google')}
+                  className="flex h-11 items-center justify-center gap-2.5 rounded-sm border border-areia-300 bg-white text-sm font-medium text-tinta transition hover:bg-areia-100"
+                >
+                  <GoogleIcon /> Continuar com Google
+                </button>
+                <button
+                  type="button"
+                  onClick={() => oauth('facebook')}
+                  className="flex h-11 items-center justify-center gap-2.5 rounded-sm border border-areia-300 bg-white text-sm font-medium text-tinta transition hover:bg-areia-100"
+                >
+                  <FacebookIcon /> Continuar com Facebook
+                </button>
+              </div>
 
-          {oauthErr && (
-            <div role="alert" className="mt-3 rounded-sm bg-terra/10 px-3 py-2 text-sm text-terra">
-              {oauthErr}
-            </div>
+              {oauthErr && (
+                <div role="alert" className="mt-3 rounded-sm bg-terra/10 px-3 py-2 text-sm text-terra">
+                  {oauthErr}
+                </div>
+              )}
+
+              <div className="my-4 flex items-center gap-3 text-xs text-tinta/50">
+                <span className="h-px flex-1 bg-areia-300" /> ou entre com e-mail <span className="h-px flex-1 bg-areia-300" />
+              </div>
+
+              <div className="grid grid-cols-2 rounded-full border border-areia-300 bg-white p-1 text-sm">
+                <button
+                  type="button"
+                  onClick={() => switchMode('login')}
+                  className={`h-9 rounded-full transition ${mode === 'login' ? 'bg-sol-700 text-white' : 'text-tinta/70'}`}
+                >
+                  Entrar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => switchMode('register')}
+                  className={`h-9 rounded-full transition ${mode === 'register' ? 'bg-sol-700 text-white' : 'text-tinta/70'}`}
+                >
+                  Cadastrar
+                </button>
+              </div>
+            </>
           )}
-
-          <div className="my-4 flex items-center gap-3 text-xs text-tinta/50">
-            <span className="h-px flex-1 bg-areia-300" /> ou entre com e-mail <span className="h-px flex-1 bg-areia-300" />
-          </div>
-
-          <div className="grid grid-cols-2 rounded-full border border-areia-300 bg-white p-1 text-sm">
-            <button
-              type="button"
-              onClick={() => switchMode('login')}
-              className={`h-9 rounded-full transition ${mode === 'login' ? 'bg-sol-700 text-white' : 'text-tinta/70'}`}
-            >
-              Entrar
-            </button>
-            <button
-              type="button"
-              onClick={() => switchMode('register')}
-              className={`h-9 rounded-full transition ${mode === 'register' ? 'bg-sol-700 text-white' : 'text-tinta/70'}`}
-            >
-              Cadastrar
-            </button>
-          </div>
 
           <form onSubmit={submit} className="mt-5 flex flex-col gap-3.5">
             {mode === 'register' && (
@@ -165,17 +188,29 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
               />
             </label>
 
-            <label className="flex flex-col gap-1.5 text-sm">
-              Senha
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
-                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                className="h-11 rounded-sm border border-areia-300 bg-white px-3 text-sm outline-none focus:border-sol-700"
-              />
-            </label>
+            {mode !== 'esqueci' && (
+              <label className="flex flex-col gap-1.5 text-sm">
+                Senha
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mínimo 6 caracteres"
+                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                  className="h-11 rounded-sm border border-areia-300 bg-white px-3 text-sm outline-none focus:border-sol-700"
+                />
+              </label>
+            )}
+
+            {mode === 'login' && (
+              <button
+                type="button"
+                onClick={() => switchMode('esqueci')}
+                className="-mt-1.5 self-end text-xs text-tinta/60 underline"
+              >
+                Esqueceu sua senha?
+              </button>
+            )}
 
             {err && (
               <div role="alert" className="rounded-sm bg-terra/10 px-3 py-2 text-sm text-terra">
@@ -193,7 +228,13 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
               disabled={loading}
               className="mt-1 h-[50px] rounded-sm bg-terra text-sm font-medium uppercase tracking-widest text-white transition hover:bg-terra-700 disabled:opacity-60"
             >
-              {loading ? 'Um momento…' : mode === 'login' ? 'Entrar' : 'Criar minha conta'}
+              {loading
+                ? 'Um momento…'
+                : mode === 'login'
+                  ? 'Entrar'
+                  : mode === 'register'
+                    ? 'Criar minha conta'
+                    : 'Enviar link de redefinição'}
             </button>
           </form>
 
@@ -205,13 +246,17 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
                   Cadastre-se
                 </button>
               </>
-            ) : (
+            ) : mode === 'register' ? (
               <>
                 Já tem conta?{' '}
                 <button type="button" onClick={() => switchMode('login')} className="text-sol-700 underline">
                   Entrar
                 </button>
               </>
+            ) : (
+              <button type="button" onClick={() => switchMode('login')} className="text-sol-700 underline">
+                Voltar para o login
+              </button>
             )}
           </p>
 
