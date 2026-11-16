@@ -70,25 +70,17 @@ export function Hero() {
         </a>
       </div>
 
-      {/* vídeo sangrando da direita — só desktop; funde no fundo com degradê,
-          não é uma caixa fechada */}
-      <div className="absolute inset-y-0 right-0 hidden w-[54%] md:block">
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-right">
+      {/* vídeo de fundo — atrás do texto em qualquer tamanho de tela (desktop e
+          mobile), com degradê claro por cima pra manter o texto legível (mais
+          forte no mobile, mais sutil no desktop, onde a foto sangra mais pra
+          direita). object-contain pra sempre mostrar a pessoa inteira, da
+          cabeça aos pés. */}
+      <div className="absolute inset-0" aria-hidden>
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-[75%_center] md:object-right">
           <source src="/video/hero-video.webm" type="video/webm" />
           <source src="/video/hero-video.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 w-[46%] bg-gradient-to-r from-areia-50 via-areia-50/15 to-transparent" aria-hidden />
-      </div>
-
-      {/* vídeo no mobile — atrás do texto, sangrando da direita, com degradê claro por cima
-          (mesmo efeito do desktop, só que mais forte pra o texto continuar legível).
-          object-contain pra sempre mostrar a pessoa inteira, da cabeça aos pés. */}
-      <div className="absolute inset-0 md:hidden" aria-hidden>
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-[75%_center]">
-          <source src="/video/hero-video.webm" type="video/webm" />
-          <source src="/video/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-areia-50 via-areia-50/80 to-areia-50/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-areia-50 via-areia-50/80 to-areia-50/20 md:via-areia-50/45 md:to-areia-50/5" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 py-14 md:px-10 md:py-24">

@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useCart } from '@/lib/cart-store';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
@@ -42,10 +41,11 @@ export function Header() {
           <button
             type="button"
             aria-label="Abrir categorias"
-            onClick={() => setSheetOpen(true)}
+            aria-expanded={sheetOpen}
+            onClick={() => setSheetOpen((v) => !v)}
             className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-terra/30 text-tinta md:hidden"
           >
-            <MenuIcon />
+            {sheetOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
 
           <Link href="/" aria-label="Caueira Beachwear — início" className="mx-auto md:mx-0">
@@ -132,34 +132,30 @@ export function Header() {
           </div>
         </div>
 
+        {/* categorias no mobile: não é mais um painel flutuante por cima da
+            página — é parte do fluxo normal do header, então quando abre ele
+            empurra o resto da página (hero, conteúdo) pra baixo em vez de
+            sobrepor. */}
+        <nav
+          aria-label="Categorias"
+          className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${
+            sheetOpen ? 'max-h-[420px]' : 'max-h-0'
+          }`}
+        >
+          <div className="flex flex-col gap-1 px-4 pb-4 pt-1">
+            {NAV.map((n) => (
+              <Link key={n.label} href={n.href} onClick={() => setSheetOpen(false)}
+                className={`rounded-lg px-3 py-3 text-[16px] font-medium ${n.accent ? 'text-terra' : 'text-tinta'}`}>
+                {n.label}
+              </Link>
+            ))}
+            <div className="my-1 h-px bg-areia-200" />
+            <Link href="/ajuda" onClick={() => setSheetOpen(false)} className="rounded-lg px-3 py-3 text-[15px] text-tinta/60">Ajuda</Link>
+          </div>
+        </nav>
       </div>
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
-
-      {sheetOpen &&
-        typeof document !== 'undefined' &&
-        createPortal(
-          <div role="dialog" aria-modal aria-label="Categorias" className="fixed inset-0 z-[100] md:hidden">
-            <button aria-label="Fechar" className="absolute inset-0 bg-tinta/40" onClick={() => setSheetOpen(false)} />
-            <div className="absolute inset-y-0 left-0 flex w-[82%] max-w-xs flex-col gap-1 bg-areia-50 p-5 shadow-2xl">
-              <div className="mb-3 flex items-center justify-between">
-                <Logo size={52} />
-                <button aria-label="Fechar categorias" onClick={() => setSheetOpen(false)} className="grid h-9 w-9 place-items-center text-tinta/60">
-                  <CloseIcon />
-                </button>
-              </div>
-              {NAV.map((n) => (
-                <Link key={n.label} href={n.href} onClick={() => setSheetOpen(false)}
-                  className={`rounded-lg px-3 py-3.5 text-[17px] font-medium ${n.accent ? 'text-terra' : 'text-tinta'}`}>
-                  {n.label}
-                </Link>
-              ))}
-              <div className="my-2 h-px bg-areia-200" />
-              <Link href="/ajuda" onClick={() => setSheetOpen(false)} className="rounded-lg px-3 py-3.5 text-[15px] text-tinta/60">Ajuda</Link>
-            </div>
-          </div>,
-          document.body,
-        )}
     </header>
   );
 }
