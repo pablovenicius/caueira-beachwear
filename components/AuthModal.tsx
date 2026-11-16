@@ -15,7 +15,7 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
   const [loading, setLoading] = useState(false);
   const [oauthErr, setOauthErr] = useState('');
 
-  const oauth = async (provider: 'google' | 'apple' | 'facebook') => {
+  const oauth = async (provider: 'google' | 'facebook') => {
     setOauthErr('');
     try {
       await signInWithOAuth(provider);
@@ -102,13 +102,6 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
               className="flex h-11 items-center justify-center gap-2.5 rounded-sm border border-areia-300 bg-white text-sm font-medium text-tinta transition hover:bg-areia-100"
             >
               <GoogleIcon /> Continuar com Google
-            </button>
-            <button
-              type="button"
-              onClick={() => oauth('apple')}
-              className="flex h-11 items-center justify-center gap-2.5 rounded-sm border border-areia-300 bg-white text-sm font-medium text-tinta transition hover:bg-areia-100"
-            >
-              <AppleIcon /> Continuar com Apple
             </button>
             <button
               type="button"
@@ -241,13 +234,6 @@ function GoogleIcon() {
       <path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.6 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6 29.6 4 24 4c-7.5 0-14 4.2-17.7 10.7Z" />
       <path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.6C29.6 35 26.9 36 24 36c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.9 39.7 16.4 44 24 44Z" />
       <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.6 5.6c-.5.4 7.2-5.3 7.2-15.2 0-1.2-.1-2.4-.4-3.5Z" />
-    </svg>
-  );
-}
-function AppleIcon() {
-  return (
-    <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M16.37 12.56c-.02-2.36 1.93-3.5 2.02-3.56-1.1-1.61-2.81-1.83-3.42-1.85-1.46-.15-2.84.86-3.58.86-.74 0-1.88-.84-3.09-.82-1.59.02-3.05.93-3.87 2.35-1.65 2.86-.42 7.09 1.18 9.41.79 1.13 1.72 2.4 2.95 2.36 1.19-.05 1.64-.76 3.07-.76 1.43 0 1.84.76 3.1.74 1.28-.02 2.08-1.15 2.86-2.29.9-1.31 1.27-2.58 1.29-2.65-.03-.01-2.48-.95-2.5-3.77ZM14.1 5.62c.65-.79 1.09-1.88.97-2.97-.94.04-2.07.63-2.74 1.41-.6.7-1.13 1.82-.99 2.89 1.05.08 2.12-.53 2.76-1.33Z" />
     </svg>
   );
 }
