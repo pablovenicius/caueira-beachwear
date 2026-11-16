@@ -74,7 +74,7 @@ export function Hero() {
     <section
       ref={sectionRef}
       aria-label="Destaques"
-      className="relative isolate min-h-[640px] overflow-hidden bg-noite md:min-h-[92vh]"
+      className="relative isolate aspect-[9/16] overflow-hidden bg-noite md:aspect-auto md:min-h-[92vh]"
     >
       {/* luz que segue o cursor — revela o grão por baixo, só onde o mouse
           passa. Decorativa, opacidade 0 até o primeiro movimento. */}
@@ -94,7 +94,19 @@ export function Hero() {
       <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-rosa/25 blur-3xl orb-float" aria-hidden />
       <div className="pointer-events-none absolute -right-16 bottom-10 h-80 w-80 rounded-full bg-sol/20 blur-3xl orb-float-slow" aria-hidden />
 
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-6 py-14 md:grid-cols-[1.1fr_0.9fr] md:gap-6 md:px-10 md:py-28">
+      {/* mobile: a própria foto, em tela cheia, atrás do texto — a seção
+          tem exatamente a proporção do vídeo (9:16), então object-cover
+          mostra o corpo inteiro sem cortar nada. Degradê leve, só o
+          suficiente pra ler o texto, sem apagar a foto. */}
+      <div className="absolute inset-0 md:hidden" aria-hidden>
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-center">
+          <source src="/video/hero-video.webm" type="video/webm" />
+          <source src="/video/hero-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/50 to-noite/5" />
+      </div>
+
+      <div className="relative mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-8 px-6 py-10 md:h-auto md:grid-cols-[1.1fr_0.9fr] md:gap-6 md:px-10 md:py-28">
         <div key={active} className="flex flex-col gap-5">
           <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.18em] text-rosa">
             <span className="h-1.5 w-1.5 rounded-full bg-rosa pulse-dot" aria-hidden />
@@ -138,13 +150,10 @@ export function Hero() {
           </div>
         </div>
 
-        {/* foto — levemente rotacionada feito uma polaroid, friso dourado,
-            em vez de uma moldura retinha e previsível. object-contain pra
-            mostrar o corpo inteiro e o biquíni bem visíveis, sem corte —
-            vale pro mobile (empilhado abaixo do texto) e pro desktop (ao
-            lado). Nada de vídeo apagado de fundo: essa é a própria foto,
-            em destaque. */}
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-[320px] rotate-[2.5deg] overflow-hidden rounded-sm bg-noite/40 ring-1 ring-sol/50 shadow-glow transition-transform duration-500 hover:rotate-0 md:max-w-[380px]">
+        {/* foto — só desktop: card rotacionado feito uma polaroid, ao lado
+            do texto. No mobile ela já está em tela cheia atrás do texto
+            (acima), não precisa de um segundo card. */}
+        <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[380px] rotate-[2.5deg] overflow-hidden rounded-sm bg-noite/40 ring-1 ring-sol/50 shadow-glow transition-transform duration-500 hover:rotate-0 md:block">
           <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain">
             <source src="/video/hero-video.webm" type="video/webm" />
             <source src="/video/hero-video.mp4" type="video/mp4" />
