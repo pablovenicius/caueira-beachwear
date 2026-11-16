@@ -70,13 +70,20 @@ export function Hero() {
         </a>
       </div>
 
-      {/* vídeo de fundo — atrás do texto em qualquer tamanho de tela (desktop e
-          mobile), com degradê claro por cima pra manter o texto legível (mais
-          forte no mobile, mais sutil no desktop, onde a foto sangra mais pra
-          direita). object-contain pra sempre mostrar a pessoa inteira, da
-          cabeça aos pés. */}
-      <div className="absolute inset-0" aria-hidden>
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-[75%_center] md:object-right">
+      {/* vídeo de fundo — atrás do texto em qualquer tamanho de tela.
+          O vídeo é vertical (retrato), então "object-contain" sozinho só
+          preenche uma faixa estreita numa seção larga. Por isso tem duas
+          camadas do mesmo vídeo: uma borrada e ampliada cobrindo a seção
+          inteira de ponta a ponta (garante que a foto realmente fique atrás
+          do texto, não só numa tira do lado), e por cima a nítida, inteira
+          e sem corte, da cabeça aos pés. Degradê claro por cima pra manter
+          o texto legível (mais forte no mobile, mais sutil no desktop). */}
+      <div className="absolute inset-0 overflow-hidden" aria-hidden>
+        <video autoPlay loop muted playsInline className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl">
+          <source src="/video/hero-video.webm" type="video/webm" />
+          <source src="/video/hero-video.mp4" type="video/mp4" />
+        </video>
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="absolute inset-0 h-full w-full object-contain object-[75%_center] md:object-right">
           <source src="/video/hero-video.webm" type="video/webm" />
           <source src="/video/hero-video.mp4" type="video/mp4" />
         </video>
