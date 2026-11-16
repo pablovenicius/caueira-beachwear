@@ -106,8 +106,21 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/50 to-noite/5" />
       </div>
 
+      {/* desktop: a foto deixa de ser um card pequeno e rotacionado e passa
+          a ser um painel grande e estruturado, encostado na borda direita
+          da tela (fora do container com padding), ocupando a altura toda
+          da seção — sem moldura, sem rotação. */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48%] overflow-hidden md:block">
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-[center_20%]">
+          <source src="/video/hero-video.webm" type="video/webm" />
+          <source src="/video/hero-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-noite to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-noite/70 to-transparent" />
+      </div>
+
       <div className="relative mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-8 px-6 py-10 md:h-auto md:grid-cols-[1.1fr_0.9fr] md:gap-6 md:px-10 md:py-28">
-        <div key={active} className="flex flex-col gap-5">
+        <div key={active} className="flex flex-col gap-5 md:max-w-xl">
           <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.18em] text-rosa">
             <span className="h-1.5 w-1.5 rounded-full bg-rosa pulse-dot" aria-hidden />
             {slide.kicker}
@@ -150,16 +163,9 @@ export function Hero() {
           </div>
         </div>
 
-        {/* foto — só desktop: card rotacionado feito uma polaroid, ao lado
-            do texto. No mobile ela já está em tela cheia atrás do texto
-            (acima), não precisa de um segundo card. */}
-        <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[380px] rotate-[2.5deg] overflow-hidden rounded-sm bg-noite/40 ring-1 ring-sol/50 shadow-glow transition-transform duration-500 hover:rotate-0 md:block">
-          <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain">
-            <source src="/video/hero-video.webm" type="video/webm" />
-            <source src="/video/hero-video.mp4" type="video/mp4" />
-          </video>
-          <div className="pointer-events-none absolute inset-0 rounded-sm ring-1 ring-inset ring-areia-50/20" aria-hidden />
-        </div>
+        {/* célula vazia — mantém a coluna de texto na largura certa; a
+            foto em si já está renderizada como painel de fundo acima. */}
+        <div className="hidden md:block" aria-hidden />
       </div>
     </section>
   );
