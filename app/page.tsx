@@ -1,6 +1,7 @@
 import { getActiveProducts } from '@/lib/supabase';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
+import { Marquee } from '@/components/Marquee';
 import { Footer } from '@/components/Footer';
 import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
@@ -38,6 +39,7 @@ export default async function Home() {
 
       <main>
         <Hero />
+        <Marquee />
 
         <CategoryShowcase
           kicker="Biquínis"

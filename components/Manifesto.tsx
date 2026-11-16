@@ -10,9 +10,9 @@ const VALUES = ['Tecido premium', 'Proteção UV50+', 'Caimento sem marcas', 'En
  */
 export function Manifesto() {
   return (
-    <section className="relative isolate overflow-hidden bg-tinta py-24 text-center md:py-32">
-      <div className="pointer-events-none absolute -left-24 top-0 h-[26rem] w-[26rem] rounded-full bg-sol/20 blur-3xl orb-float" aria-hidden />
-      <div className="pointer-events-none absolute -right-20 bottom-0 h-[22rem] w-[22rem] rounded-full bg-terra/25 blur-3xl orb-float-slow" aria-hidden />
+    <section className="cut-both relative isolate overflow-hidden bg-noite py-28 text-center md:py-40">
+      <div className="pointer-events-none absolute -left-24 top-0 h-[26rem] w-[26rem] rounded-full bg-rosa/20 blur-3xl orb-float" aria-hidden />
+      <div className="pointer-events-none absolute -right-20 bottom-0 h-[22rem] w-[22rem] rounded-full bg-sol/25 blur-3xl orb-float-slow" aria-hidden />
       <span className="grain-overlay" aria-hidden />
 
       <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-7 px-6">
@@ -23,7 +23,7 @@ export function Manifesto() {
         </Reveal>
 
         <Reveal delay={100}>
-          <p className="text-pretty font-display text-[32px] italic leading-[1.2] text-areia-50 md:text-[48px] lg:text-[56px]">
+          <p className="text-gradient-sunset text-pretty font-display text-[36px] italic leading-[1.15] md:text-[58px] lg:text-[68px]">
             Não vestimos corpos.
             <br />
             Celebramos cada um deles.

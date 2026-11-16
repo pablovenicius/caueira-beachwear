@@ -160,3 +160,53 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .line-rise { opacity: 1; animation: none; }
 }
+
+/* ---- quarta reformulação: ruptura de layout, não só retoque ---- */
+
+/* texto preenchido com o gradiente da marca (coral → dourado) — usado nas
+   manchetes grandes dos blocos escuros, no lugar de uma cor sólida. */
+.text-gradient-sunset {
+  background-image: linear-gradient(100deg, #E8537A 0%, #D9A441 65%, #F6E8C9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* faixa de texto em loop contínuo (marquee) — mecânica nova no site,
+   nenhuma outra seção se move assim. Duplicamos o conteúdo e deslizamos
+   50%, então o loop fecha sem salto. Pausa no hover pra quem quiser ler. */
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 26s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* bordas diagonais entre seções — corte de ~2-3° em vez de uma linha reta,
+   repetido em Hero/Manifesto/CategoryShowcase pra dar ritmo de "recorte"
+   em vez de retângulos empilhados. */
+.cut-bottom {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.2vw), 0 100%);
+}
+.cut-top {
+  clip-path: polygon(0 2.2vw, 100% 0, 100% 100%, 0 100%);
+}
+.cut-both {
+  clip-path: polygon(0 2.2vw, 100% 0, 100% calc(100% - 2.2vw), 0 100%);
+}
+
+/* "decodificação" dos números — alguns quadros de dígitos aleatórios antes
+   de assentar no valor final (ver ScrambleStat.tsx), em vez de uma contagem
+   linear e previsível. */
+.scramble-digit {
+  font-variant-numeric: tabular-nums;
+}

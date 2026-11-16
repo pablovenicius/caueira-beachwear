@@ -31,7 +31,11 @@ export function CategoryShowcase({
     <section className="mx-auto max-w-7xl px-5 py-14 md:px-6 md:py-20">
       <div className={`grid items-center gap-10 md:grid-cols-2 md:gap-16 ${reverse ? 'md:[&>*:first-child]:order-2' : ''}`}>
         <Reveal className="relative mx-auto aspect-[4/5] w-full max-w-[420px]">
-          <div className="group absolute inset-0 right-10 top-0 overflow-hidden bg-areia-200">
+          <div
+            className={`group absolute inset-0 right-10 top-0 overflow-hidden rounded-sm bg-areia-200 shadow-glow transition-transform duration-500 hover:rotate-0 ${
+              reverse ? '-rotate-2' : 'rotate-2'
+            }`}
+          >
             {mainImage ? (
               <Image src={mainImage.src} alt={mainImage.alt} fill sizes="(max-width: 768px) 70vw, 360px"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
@@ -40,12 +44,17 @@ export function CategoryShowcase({
             )}
             <span className="shimmer-sweep" aria-hidden />
           </div>
-          <div className="absolute bottom-0 right-0 h-[58%] w-[52%] overflow-hidden border-4 border-areia-50 bg-areia-300 shadow-glow ring-1 ring-sol/50">
-            {secondaryImage ? (
-              <Image src={secondaryImage.src} alt={secondaryImage.alt} fill sizes="220px" className="object-cover" />
-            ) : (
-              <div className="h-full w-full bg-areia-200" />
-            )}
+          {/* segunda foto, sobreposta, com borda em gradiente coral→dourado
+              em vez do friso dourado único — a mesma dupla de cor do resto
+              da reformulação. */}
+          <div className="absolute bottom-0 right-0 h-[58%] w-[52%] -rotate-2 rounded-sm bg-gradient-to-br from-rosa to-sol p-[3px] shadow-glow">
+            <div className="relative h-full w-full overflow-hidden rounded-[2px] bg-areia-300">
+              {secondaryImage ? (
+                <Image src={secondaryImage.src} alt={secondaryImage.alt} fill sizes="220px" className="object-cover" />
+              ) : (
+                <div className="h-full w-full bg-areia-200" />
+              )}
+            </div>
           </div>
         </Reveal>
 
@@ -58,7 +67,7 @@ export function CategoryShowcase({
           <p className="max-w-prose text-[15px] leading-relaxed text-tinta/70">{body}</p>
           <Link href={href} className="group mt-2 flex w-fit items-center gap-3 text-[14px] font-medium text-mar">
             Ver mais
-            <span className="grid h-9 w-9 place-items-center rounded-full border border-mar/30 text-mar transition group-hover:border-mar group-hover:bg-mar group-hover:text-areia-50 group-hover:shadow-glow">
+            <span className="grid h-9 w-9 place-items-center rounded-full border border-mar/30 text-mar transition group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-rosa group-hover:to-sol group-hover:text-noite group-hover:shadow-glow">
               <ArrowIcon />
             </span>
           </Link>

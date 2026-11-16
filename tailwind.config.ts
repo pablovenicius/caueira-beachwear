@@ -26,6 +26,13 @@ export default {
         tinta: '#2B2420',
         // petróleo profundo — números, links, rodapé (o "azul" que acompanha o caramelo na Bautz)
         mar: { DEFAULT: '#1F4A4D', 100: '#DCE8E8', 700: '#0F2A2C' },
+        // Quarta reformulação (nov/2026): o cliente pediu uma ruptura radical,
+        // não um ajuste — mesma paleta-base, mas agora usada em blocos
+        // escuros/diagonais com um acento vivo (coral-rosa, a cor do biquíni
+        // de verdade usado nas fotos) em gradiente com o dourado. "noite" é o
+        // preto quase-preto dos blocos de impacto (hero, manifesto, ticker).
+        rosa: { DEFAULT: '#E8537A', 700: '#C23A5E' },
+        noite: { DEFAULT: '#15110D', 700: '#0B0907' },
       },
       fontFamily: {
         // Fraunces: serif contemporânea de alto contraste — manchetes editoriais,
