@@ -70,29 +70,36 @@ export function Hero() {
         </a>
       </div>
 
-      {/* vídeo de fundo — atrás do texto em qualquer tamanho de tela.
-          O vídeo é vertical (retrato), então "object-contain" sozinho só
-          preenche uma faixa estreita numa seção larga. Por isso tem duas
-          camadas do mesmo vídeo: uma borrada e ampliada cobrindo a seção
-          inteira de ponta a ponta (garante que a foto realmente fique atrás
-          do texto, não só numa tira do lado), e por cima a nítida, inteira
-          e sem corte, da cabeça aos pés. Degradê claro por cima pra manter
-          o texto legível (mais forte no mobile, mais sutil no desktop). */}
-      <div className="absolute inset-0 overflow-hidden" aria-hidden>
-        <video autoPlay loop muted playsInline className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl">
+      {/* vídeo — nítido, corpo inteiro, sem corte e sem borrão. No mobile
+          sangra por trás do texto (mais perto do centro); no desktop fica
+          ancorado à direita, numa moldura com friso dourado fino — leitura
+          de "fotografia emoldurada", a mesma linguagem de joalheria da
+          referência do cliente, em vez de tentar fingir uma foto larga que
+          o material de origem (retrato) não tem. */}
+      <div className="absolute inset-0 md:hidden" aria-hidden>
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-[75%_center]">
           <source src="/video/hero-video.webm" type="video/webm" />
           <source src="/video/hero-video.mp4" type="video/mp4" />
         </video>
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="absolute inset-0 h-full w-full object-contain object-[75%_center] md:object-right">
-          <source src="/video/hero-video.webm" type="video/webm" />
-          <source src="/video/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-areia-50 via-areia-50/80 to-areia-50/20 md:via-areia-50/45 md:to-areia-50/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-areia-50 via-areia-50/80 to-areia-50/20" />
       </div>
+
+      <div className="absolute inset-y-6 right-6 hidden w-[44%] overflow-hidden rounded-sm shadow-glow ring-1 ring-sol/40 md:block">
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-top">
+          <source src="/video/hero-video.webm" type="video/webm" />
+          <source src="/video/hero-video.mp4" type="video/mp4" />
+        </video>
+        {/* friso dourado fino por dentro da moldura */}
+        <div className="pointer-events-none absolute inset-0 rounded-sm ring-1 ring-inset ring-sol/60" aria-hidden />
+      </div>
+      <div className="absolute inset-y-6 right-6 hidden w-[44%] bg-gradient-to-r from-areia-50 via-areia-50/10 to-transparent md:block" aria-hidden />
 
       <div className="relative mx-auto max-w-7xl px-6 py-14 md:px-10 md:py-24">
         <div key={active} className="flex max-w-[480px] flex-col gap-4 animate-[heroFade_0.6s_ease-out] pl-8 md:pl-16">
-          <span className="text-[13px] font-medium text-terra/80">{slide.kicker}</span>
+          <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.14em] text-terra/80">
+            <span className="h-1.5 w-1.5 rounded-full bg-sol pulse-dot" aria-hidden />
+            {slide.kicker}
+          </span>
           <h1 className="whitespace-pre-line text-pretty font-display text-[38px] leading-[1.05] text-terra md:text-[54px]">
             {slide.title}
           </h1>
@@ -106,9 +113,11 @@ export function Hero() {
           <div className="relative mt-2 w-fit">
             <Link
               href={slide.href}
-              className="inline-flex h-[52px] items-center rounded-full bg-mar px-8 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-mar-700"
+              className="group group/cta relative inline-flex h-[52px] items-center overflow-hidden rounded-full bg-mar px-8 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-glow"
             >
-              {slide.cta}
+              <span className="relative z-[1]">{slide.cta}</span>
+              <span className="absolute inset-0 -z-0 bg-mar-700 opacity-0 transition-opacity duration-300 group-hover/cta:opacity-100" aria-hidden />
+              <span className="shimmer-sweep" aria-hidden />
             </Link>
             <span className="absolute -bottom-1.5 -left-1.5 h-3 w-3 rounded-full bg-sol" aria-hidden />
           </div>
@@ -127,6 +136,14 @@ export function Hero() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* pista de rolagem — toque discreto, some sozinha ao primeiro scroll
+          via o próprio ciclo de vida do componente (não precisa de JS: é só
+          decorativa e unobtrusive o bastante pra ficar sempre). */}
+      <div className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-mar/50 md:flex" aria-hidden>
+        <span>Role</span>
+        <span className="h-8 w-px animate-pulse bg-gradient-to-b from-mar/50 to-transparent" />
       </div>
     </section>
   );

@@ -21,8 +21,10 @@ const PAYMENTS = ['Pix', 'Visa', 'Mastercard', 'Elo', 'Amex', 'Boleto'];
 export function Footer() {
   const { isAdmin } = useAuth();
   return (
-    <footer className="border-t border-terra/20 bg-mar-700 pt-16 text-center text-areia-200 pb-[calc(4rem+var(--bottom-nav-h))] md:pb-16">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6">
+    <footer className="relative overflow-hidden border-t border-terra/20 bg-mar-700 pt-16 text-center text-areia-200 pb-[calc(4rem+var(--bottom-nav-h))] md:pb-16">
+      <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sol to-transparent" aria-hidden />
+      <span className="grain-overlay" aria-hidden />
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 px-6">
         <Logo size={60} />
         <p className="max-w-md text-[15px] leading-relaxed text-areia-200/85">
           Biquínis, maiôs e saídas de praia com proteção UV50+ — receba lançamentos e ganhe 10% off na
@@ -75,7 +77,24 @@ export function Footer() {
           <span>Compra 100% segura</span>
           <span>Caueira Beachwear · CNPJ 00.000.000/0001-00</span>
         </div>
+
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Voltar ao topo"
+          className="mt-1 grid h-10 w-10 place-items-center rounded-full border border-sol/30 text-sol transition hover:border-sol hover:bg-sol/10"
+        >
+          <UpIcon />
+        </button>
       </div>
     </footer>
+  );
+}
+
+function UpIcon() {
+  return (
+    <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
   );
 }

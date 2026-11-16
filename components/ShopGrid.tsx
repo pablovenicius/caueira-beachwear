@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { Product } from '@/types/product';
 import { ProductCard } from '@/components/ProductCard';
+import { Reveal } from '@/components/Reveal';
 
 const PIECE_FILTERS = ['Todos', 'Conjuntos', 'Top', 'Calcinha', 'Maiôs', 'Saídas'] as const;
 
@@ -63,7 +64,9 @@ export function ShopGrid({
       ) : (
         <div className="grid grid-cols-2 gap-x-3.5 gap-y-8 sm:gap-x-6 lg:grid-cols-4">
           {filtered.map((product, i) => (
-            <ProductCard key={product.id} product={product} priority={i < 4} />
+            <Reveal key={product.id} delay={Math.min(i, 7) * 60}>
+              <ProductCard product={product} priority={i < 4} />
+            </Reveal>
           ))}
         </div>
       )}

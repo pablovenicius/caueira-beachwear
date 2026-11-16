@@ -39,6 +39,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           ) : (
             <div className="h-full w-full bg-areia-300" />
           )}
+          <span className="shimmer-sweep" aria-hidden />
         </Link>
 
         {product.tag && (

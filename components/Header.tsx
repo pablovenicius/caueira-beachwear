@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCart } from '@/lib/cart-store';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
@@ -29,14 +29,30 @@ export function Header() {
   const [authOpen, setAuthOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // sombra sutil só aparece depois que a página rola — dá uma noção de
+  // profundidade/"vidro" ao cabeçalho fixo sem precisar de sombra pesada o
+  // tempo todo (toque discreto de "tech", comum em lojas de alto padrão).
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-areia-50/95 backdrop-blur">
-      <p className="bg-mar-700 py-1.5 text-center text-[12px] text-sol/90">
-        Frete grátis acima de R$ 399 · 5% off no Pix
+    <header
+      className={`sticky top-0 z-30 bg-areia-50/95 backdrop-blur transition-shadow duration-300 ${
+        scrolled ? 'shadow-[0_8px_24px_rgba(31,74,77,0.10)]' : ''
+      }`}
+    >
+      <p className="relative overflow-hidden bg-mar-700 py-1.5 text-center text-[12px] tracking-wide text-sol/90">
+        <span className="grain-overlay" aria-hidden />
+        <span className="relative">Frete grátis acima de R$ 399 · 5% off no Pix</span>
       </p>
 
-      <div className="border-b border-sol/15">
+      <div className="border-b border-sol/15 bg-gradient-to-b from-transparent to-sol/[0.03]">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:px-6">
           <button
             type="button"

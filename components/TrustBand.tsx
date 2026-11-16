@@ -1,3 +1,6 @@
+import { CountUpStat } from '@/components/CountUpStat';
+import { Reveal } from '@/components/Reveal';
+
 const STATS = [
   { value: '+50', label: 'mil clientes satisfeitas' },
   { value: '30', label: 'dias pra trocar sem custo' },
@@ -19,11 +22,13 @@ export function TrustBand() {
         </p>
 
         <dl className="grid grid-cols-2 gap-y-8 md:grid-cols-4 md:gap-6">
-          {STATS.map((s) => (
-            <div key={s.label} className="flex flex-col items-center gap-1.5 text-center">
-              <dt className="font-display text-4xl text-terra md:text-5xl">{s.value}</dt>
+          {STATS.map((s, i) => (
+            <Reveal key={s.label} delay={i * 90} as="div" className="flex flex-col items-center gap-1.5 text-center">
+              <dt className="font-display text-4xl text-terra md:text-5xl">
+                <CountUpStat value={s.value} />
+              </dt>
               <dd className="max-w-[12ch] text-[13px] leading-snug text-mar">{s.label}</dd>
-            </div>
+            </Reveal>
           ))}
         </dl>
       </div>
