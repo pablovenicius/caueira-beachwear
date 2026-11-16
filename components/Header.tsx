@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useCart } from '@/lib/cart-store';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
@@ -133,29 +134,32 @@ export function Header() {
 
       </div>
 
-      {sheetOpen && (
-        <div role="dialog" aria-modal aria-label="Categorias" className="fixed inset-0 z-40 md:hidden">
-          <button aria-label="Fechar" className="absolute inset-0 bg-tinta/40" onClick={() => setSheetOpen(false)} />
-          <div className="absolute inset-y-0 left-0 flex w-[82%] max-w-xs flex-col gap-1 bg-areia-50 p-5 shadow-2xl">
-            <div className="mb-3 flex items-center justify-between">
-              <Logo size={52} />
-              <button aria-label="Fechar categorias" onClick={() => setSheetOpen(false)} className="grid h-9 w-9 place-items-center text-tinta/60">
-                <CloseIcon />
-              </button>
-            </div>
-            {NAV.map((n) => (
-              <Link key={n.label} href={n.href} onClick={() => setSheetOpen(false)}
-                className={`rounded-lg px-3 py-3.5 text-[17px] font-medium ${n.accent ? 'text-terra' : 'text-tinta'}`}>
-                {n.label}
-              </Link>
-            ))}
-            <div className="my-2 h-px bg-areia-200" />
-            <Link href="/ajuda" onClick={() => setSheetOpen(false)} className="rounded-lg px-3 py-3.5 text-[15px] text-tinta/60">Ajuda</Link>
-          </div>
-        </div>
-      )}
-
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+
+      {sheetOpen &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div role="dialog" aria-modal aria-label="Categorias" className="fixed inset-0 z-[100] md:hidden">
+            <button aria-label="Fechar" className="absolute inset-0 bg-tinta/40" onClick={() => setSheetOpen(false)} />
+            <div className="absolute inset-y-0 left-0 flex w-[82%] max-w-xs flex-col gap-1 bg-areia-50 p-5 shadow-2xl">
+              <div className="mb-3 flex items-center justify-between">
+                <Logo size={52} />
+                <button aria-label="Fechar categorias" onClick={() => setSheetOpen(false)} className="grid h-9 w-9 place-items-center text-tinta/60">
+                  <CloseIcon />
+                </button>
+              </div>
+              {NAV.map((n) => (
+                <Link key={n.label} href={n.href} onClick={() => setSheetOpen(false)}
+                  className={`rounded-lg px-3 py-3.5 text-[17px] font-medium ${n.accent ? 'text-terra' : 'text-tinta'}`}>
+                  {n.label}
+                </Link>
+              ))}
+              <div className="my-2 h-px bg-areia-200" />
+              <Link href="/ajuda" onClick={() => setSheetOpen(false)} className="rounded-lg px-3 py-3.5 text-[15px] text-tinta/60">Ajuda</Link>
+            </div>
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }
