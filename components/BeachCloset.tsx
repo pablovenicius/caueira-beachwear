@@ -12,13 +12,16 @@ const DRAWERS = [
 ];
 
 /**
- * Primeira tela da home: uma porta fechada, com a praia por trás. Rolar a
- * página "abre" a porta (progresso ligado ao scroll, não a um clique) e
- * revela a cena — aí entra o closet de praia interativo, com uma gaveta por
- * categoria. Clicar numa gaveta abre ela e leva pra categoria.
+ * Primeira tela da home: uma porta de vidro fechada, com a praia por trás.
+ * Rolar a página "abre" a porta (progresso ligado ao scroll, não a um
+ * clique) e revela a cena — aí entra o closet de praia interativo, com uma
+ * gaveta por categoria. Clicar numa gaveta abre ela e leva pra categoria.
  *
- * Tudo construído em CSS/SVG (sem fotos) — dá controle total sobre a
- * animação e fica leve em qualquer tela.
+ * Tudo construído em CSS/SVG (sem fotos — nenhuma ferramenta de geração de
+ * imagem disponível neste ambiente, decisão validada com o cliente). A
+ * porta imita uma porta branca com vidraça (como a referência que o
+ * cliente trouxe) e o closet usa os tons bege/couro/madeira da segunda
+ * referência, em vez de ilustrar algo genérico.
  */
 export function BeachCloset() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -61,7 +64,11 @@ export function BeachCloset() {
           {/* a praia, sempre atrás da porta */}
           <div className="absolute inset-0" aria-hidden>
             <div className="absolute inset-0 bg-gradient-to-b from-ceu from-0% via-ceu-700 via-55% to-mar to-85%" />
-            <div className="absolute left-1/2 top-[16%] h-24 w-24 -translate-x-1/2 rounded-full bg-sol shadow-glow md:h-32 md:w-32" />
+            <div className="absolute left-1/2 top-[14%] h-24 w-24 -translate-x-1/2 rounded-full bg-sol shadow-glow md:h-32 md:w-32" />
+            <div
+              className="absolute left-1/2 top-[14%] h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sol/25 blur-2xl md:h-72 md:w-72"
+              aria-hidden
+            />
             <div className="absolute inset-x-0 top-[62%] h-px bg-areia-50/40" />
             <div className="absolute inset-x-0 bottom-0 h-[26%] bg-gradient-to-b from-areia-200 to-areia-300" />
             {/* palmeiras simples, só decoração */}
@@ -81,28 +88,12 @@ export function BeachCloset() {
             <p className="text-gradient-sunset font-display text-3xl italic md:text-5xl">Bem-vinda ao seu closet</p>
           </div>
 
-          {/* as duas folhas da porta */}
-          <div
-            ref={leftRef}
-            className="absolute inset-y-0 left-0 z-10 w-1/2 border-r border-sol/30 bg-gradient-to-br from-terra-700 via-terra to-terra-700 will-change-transform"
-          >
-            <div
-              className="absolute inset-0 opacity-25"
-              style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent 0 38px, rgba(0,0,0,0.3) 38px 40px)' }}
-              aria-hidden
-            />
-            <div className="absolute right-6 top-1/2 h-20 w-2.5 -translate-y-1/2 rounded-full bg-sol/90 shadow-glow md:h-28" aria-hidden />
+          {/* as duas folhas da porta — branca, com vidraça, feito a referência */}
+          <div ref={leftRef} className="absolute inset-y-0 left-0 z-10 w-1/2 will-change-transform">
+            <DoorLeaf />
           </div>
-          <div
-            ref={rightRef}
-            className="absolute inset-y-0 right-0 z-10 w-1/2 border-l border-sol/30 bg-gradient-to-bl from-terra-700 via-terra to-terra-700 will-change-transform"
-          >
-            <div
-              className="absolute inset-0 opacity-25"
-              style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent 0 38px, rgba(0,0,0,0.3) 38px 40px)' }}
-              aria-hidden
-            />
-            <div className="absolute left-6 top-1/2 h-20 w-2.5 -translate-y-1/2 rounded-full bg-sol/90 shadow-glow md:h-28" aria-hidden />
+          <div ref={rightRef} className="absolute inset-y-0 right-0 z-10 w-1/2 will-change-transform">
+            <DoorLeaf flip />
           </div>
 
           {/* conteúdo sobre a porta fechada — some conforme ela abre */}
@@ -122,6 +113,14 @@ export function BeachCloset() {
       {/* ---- tela 2: o closet em si, com uma gaveta por categoria ---- */}
       <section className="relative overflow-hidden bg-gradient-to-b from-areia-300 via-areia-100 to-areia-50 pb-20 pt-14 md:pb-28 md:pt-20">
         <span className="grain-overlay" aria-hidden />
+
+        {/* spots de teto, como na referência do closet */}
+        <div className="pointer-events-none absolute inset-x-0 top-6 flex justify-center gap-16 md:gap-28" aria-hidden>
+          <span className="h-2 w-2 rounded-full bg-sol/70 shadow-glow blur-[1px]" />
+          <span className="h-2 w-2 rounded-full bg-sol/70 shadow-glow blur-[1px]" />
+          <span className="h-2 w-2 rounded-full bg-sol/70 shadow-glow blur-[1px]" />
+        </div>
+
         <div className="relative mx-auto max-w-lg px-6 text-center">
           <Reveal className="flex flex-col items-center gap-2">
             <span className="text-[13px] font-medium uppercase tracking-[0.18em] text-terra/80">Seu closet de praia</span>
@@ -129,25 +128,67 @@ export function BeachCloset() {
           </Reveal>
         </div>
 
-        {/* o armário */}
+        {/* o armário — tons bege/couro/madeira, como na referência */}
         <Reveal delay={100} className="relative mx-auto mt-10 w-full max-w-md px-6">
-          <div className="rounded-sm bg-gradient-to-b from-terra-700 to-terra p-3 shadow-glow ring-1 ring-sol/40 md:p-4">
-            {/* moldura superior decorativa */}
-            <div className="mb-3 h-2 rounded-full bg-gradient-to-r from-sol/0 via-sol/70 to-sol/0" aria-hidden />
-
+          <div className="rounded-sm bg-gradient-to-b from-areia-200 to-areia-100 p-3 shadow-glow ring-1 ring-terra/20 md:p-4">
             <div className="flex flex-col gap-2.5">
               {DRAWERS.map((d, i) => (
                 <DrawerRow key={d.label} index={i} {...d} />
               ))}
             </div>
-
-            <div className="mt-3 h-2 rounded-full bg-gradient-to-r from-sol/0 via-sol/70 to-sol/0" aria-hidden />
           </div>
-          {/* "pés" do armário */}
-          <div className="mx-auto h-3 w-[86%] rounded-b-sm bg-terra-700/80" aria-hidden />
+
+          {/* piso de madeira, como no chão da referência */}
+          <div
+            className="mx-auto mt-2 h-10 w-full rounded-b-sm"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(90deg, #D6CBB2 0 46px, #C9BB9B 46px 48px), linear-gradient(180deg, #E8E0CF, #D6CBB2)',
+              backgroundBlendMode: 'multiply',
+            }}
+            aria-hidden
+          />
         </Reveal>
       </section>
     </>
+  );
+}
+
+/**
+ * Uma folha de porta branca com vidraça — stiles e travessas pintadas,
+ * janela central com caixilho em cruz e um leve brilho de vidro, painel
+ * inferior sólido. `flip` espelha a folha pra montar o par (maçaneta
+ * sempre do lado de dentro, perto da fresta central).
+ */
+function DoorLeaf({ flip = false }: { flip?: boolean }) {
+  return (
+    <div className={`relative h-full w-full ${flip ? 'scale-x-[-1]' : ''}`}>
+      {/* stile externo */}
+      <div className="absolute inset-y-0 left-0 w-[11%] bg-gradient-to-r from-areia-200 to-areia-50 shadow-[inset_-2px_0_3px_rgba(0,0,0,0.08)]" />
+      {/* stile interno, junto da fresta */}
+      <div className="absolute inset-y-0 right-0 w-[5%] bg-gradient-to-l from-areia-200 to-areia-50" />
+      {/* travessa superior */}
+      <div className="absolute inset-x-0 top-0 h-[5%] bg-areia-50" />
+      {/* travessa entre vidraça e painel */}
+      <div className="absolute inset-x-0 top-[52%] h-[6%] bg-gradient-to-b from-areia-50 to-areia-100 shadow-[inset_0_2px_3px_rgba(0,0,0,0.08)]" />
+      {/* rodapé */}
+      <div className="absolute inset-x-0 bottom-0 h-[3%] bg-areia-100" />
+
+      {/* vidraça — deixa a praia (atrás) aparecer, com caixilho em cruz */}
+      <div className="absolute left-[11%] right-[5%] top-[5%] h-[47%] overflow-hidden">
+        <div className="absolute inset-0 bg-ceu/8" />
+        <div className="absolute inset-x-0 top-1/2 h-[3.5%] -translate-y-1/2 bg-areia-50" />
+        <div className="absolute inset-y-0 left-1/2 w-[3.5%] -translate-x-1/2 bg-areia-50" />
+        {/* brilho de vidro */}
+        <div className="absolute -inset-y-6 left-[-15%] w-[26%] rotate-[10deg] bg-areia-50/25 blur-[2px]" />
+      </div>
+
+      {/* painel inferior, sólido, com relevo */}
+      <div className="absolute inset-x-[11%] bottom-[7%] top-[61%] rounded-[2px] bg-gradient-to-br from-areia-100 to-areia-200 shadow-[inset_0_2px_5px_rgba(0,0,0,0.14),inset_0_-2px_4px_rgba(255,255,255,0.5)]" />
+
+      {/* maçaneta — sempre perto da fresta central */}
+      <div className="absolute right-[9%] top-1/2 h-9 w-2.5 -translate-y-1/2 rounded-full bg-sol shadow-glow md:h-12" />
+    </div>
   );
 }
 
@@ -156,21 +197,31 @@ function DrawerRow({ label, hint, href, index }: { label: string; hint: string; 
     <Reveal delay={150 + index * 70}>
       <Link
         href={href}
-        className="group relative flex items-center justify-between overflow-hidden rounded-[2px] bg-gradient-to-b from-areia-50 to-areia-200 px-5 py-4 ring-1 ring-terra/25 transition-all duration-300 hover:translate-x-2 hover:shadow-glow md:px-6 md:py-5"
+        className="group relative flex items-center justify-between overflow-hidden rounded-[2px] bg-gradient-to-b from-areia-50 to-areia-100 px-5 py-4 ring-1 ring-terra/15 transition-all duration-300 hover:translate-x-2 hover:shadow-glow md:px-6 md:py-5"
       >
-        <span className="flex flex-col items-start text-left">
-          <span className="font-display text-lg text-tinta md:text-xl">{label}</span>
-          <span className="text-[12px] text-tinta/55">{hint}</span>
-        </span>
         <span className="flex items-center gap-3">
-          <span className="hidden h-1.5 w-10 rounded-full bg-terra/40 transition group-hover:bg-sol sm:block" aria-hidden />
-          <span className="grid h-8 w-8 place-items-center rounded-full border border-terra/30 text-terra transition group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-rosa group-hover:to-sol group-hover:text-noite">
-            <ArrowIcon />
+          <LeatherPull />
+          <span className="flex flex-col items-start text-left">
+            <span className="font-display text-lg text-tinta md:text-xl">{label}</span>
+            <span className="text-[12px] text-tinta/55">{hint}</span>
           </span>
+        </span>
+        <span className="grid h-8 w-8 place-items-center rounded-full border border-terra/30 text-terra transition group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-rosa group-hover:to-sol group-hover:text-noite">
+          <ArrowIcon />
         </span>
         <span className="shimmer-sweep" aria-hidden />
       </Link>
     </Reveal>
+  );
+}
+
+/** Puxador de couro — a mesma alça em formato de D da referência do closet. */
+function LeatherPull() {
+  return (
+    <svg aria-hidden width="20" height="28" viewBox="0 0 20 28" fill="none" className="shrink-0">
+      <path d="M5 6c0-3 10-3 10 0v9c0 3-10 3-10 0V6Z" fill="#C17F4A" fillOpacity="0.85" />
+      <path d="M5 6c0-3 10-3 10 0v9c0 3-10 3-10 0V6Z" stroke="#8A5425" strokeWidth="1" />
+    </svg>
   );
 }
 
