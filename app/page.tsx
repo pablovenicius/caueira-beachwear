@@ -1,6 +1,6 @@
 import { getActiveProducts } from '@/lib/supabase';
 import { Header } from '@/components/Header';
-import { Hero } from '@/components/Hero';
+import { BeachCloset } from '@/components/BeachCloset';
 import { Marquee } from '@/components/Marquee';
 import { Footer } from '@/components/Footer';
 import { BottomNav } from '@/components/BottomNav';
@@ -38,7 +38,7 @@ export default async function Home() {
       <Header />
 
       <main>
-        <Hero />
+        <BeachCloset />
         <Marquee />
 
         <CategoryShowcase

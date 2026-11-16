@@ -33,6 +33,8 @@ export default {
         // preto quase-preto dos blocos de impacto (hero, manifesto, ticker).
         rosa: { DEFAULT: '#E8537A', 700: '#C23A5E' },
         noite: { DEFAULT: '#15110D', 700: '#0B0907' },
+        // céu da praia (usado só na cena interativa porta→closet)
+        ceu: { DEFAULT: '#BFE3EE', 700: '#6FB4CE' },
       },
       fontFamily: {
         // Fraunces: serif contemporânea de alto contraste — manchetes editoriais,
