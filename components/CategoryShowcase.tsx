@@ -54,7 +54,7 @@ export function CategoryShowcase({
             <span className="h-px w-8 bg-gradient-to-r from-terra to-sol" aria-hidden />
             <span className="text-[13px] font-medium uppercase tracking-wide text-terra/80">{kicker}</span>
           </div>
-          <h2 className="font-display text-pretty text-3xl text-tinta md:text-[40px] md:leading-[1.08]">{title}</h2>
+          <h2 className="font-display text-pretty text-4xl text-tinta md:text-[52px] md:leading-[1.05]">{title}</h2>
           <p className="max-w-prose text-[15px] leading-relaxed text-tinta/70">{body}</p>
           <Link href={href} className="group mt-2 flex w-fit items-center gap-3 text-[14px] font-medium text-mar">
             Ver mais

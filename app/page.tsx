@@ -6,6 +6,7 @@ import { BottomNav } from '@/components/BottomNav';
 import { CartDrawer } from '@/components/CartDrawer';
 import { ShopGrid } from '@/components/ShopGrid';
 import { CategoryShowcase } from '@/components/CategoryShowcase';
+import { Manifesto } from '@/components/Manifesto';
 import { TrustBand } from '@/components/TrustBand';
 import { Testimonials } from '@/components/Testimonials';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
@@ -48,6 +49,8 @@ export default async function Home() {
         />
 
         <ShopGrid title="Mais desejados" subtitle="Peças em destaque no momento" products={products} />
+
+        <Manifesto />
 
         <CategoryShowcase
           kicker="Maiôs"

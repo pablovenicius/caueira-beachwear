@@ -1,32 +1,39 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 /**
  * Conta de 0 até o número da estatística quando ela entra na tela — um
- * único efeito, disparado uma vez, nada de recontar a cada scroll. Separa o
- * valor em prefixo/número/sufixo pra lidar com formatos como "+50",
- * "5%" ou "UV50+" sem precisar de uma versão por estatística.
+ * único efeito, disparado uma vez. O parse de prefixo/número/sufixo é
+ * memoizado por `value`: sem isso, o `.match()` cria um array novo a cada
+ * render, o efeito re-executa, recria o IntersectionObserver e empilha
+ * vários loops de animação ao mesmo tempo (o bug de "contar loucamente").
  */
 export function CountUpStat({ value, durationMs = 1200 }: { value: string; durationMs?: number }) {
-  const match = value.match(/(\D*)(\d+)(\D*)/);
+  const parsed = useMemo(() => {
+    const m = value.match(/(\D*)(\d+)(\D*)/);
+    if (!m) return null;
+    return { prefix: m[1], target: parseInt(m[2], 10), suffix: m[3] };
+  }, [value]);
+
   const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(match ? 0 : null);
+  const started = useRef(false);
+  const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    if (!match) return;
+    if (!parsed) return;
     const el = ref.current;
     if (!el) return;
-    const target = parseInt(match[2], 10);
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
+        if (!entry.isIntersecting || started.current) return;
+        started.current = true;
         io.disconnect();
         const start = performance.now();
         const tick = (now: number) => {
           const p = Math.min(1, (now - start) / durationMs);
           const eased = 1 - Math.pow(1 - p, 3);
-          setDisplay(Math.round(eased * target));
+          setDisplay(Math.round(eased * parsed.target));
           if (p < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
@@ -35,14 +42,14 @@ export function CountUpStat({ value, durationMs = 1200 }: { value: string; durat
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [match, durationMs, value]);
+  }, [parsed, durationMs]);
 
-  if (!match) return <span ref={ref}>{value}</span>;
+  if (!parsed) return <span ref={ref}>{value}</span>;
   return (
     <span ref={ref}>
-      {match[1]}
+      {parsed.prefix}
       {display}
-      {match[3]}
+      {parsed.suffix}
     </span>
   );
 }

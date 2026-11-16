@@ -127,3 +127,36 @@ body {
 .pulse-dot {
   animation: softPulse 2.6s ease-out infinite;
 }
+
+/* Esferas de luz que derivam devagar — usadas atrás de texto em painéis
+   escuros (Manifesto, hero) pra dar profundidade/"tech" sem virar um
+   gradiente estático chapado. */
+@keyframes orbFloat {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(4%, -6%) scale(1.08); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.orb-float {
+  animation: orbFloat 14s ease-in-out infinite;
+}
+.orb-float-slow {
+  animation: orbFloat 20s ease-in-out infinite reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orb-float, .orb-float-slow { animation: none; }
+}
+
+/* Entrada de cada linha do título do hero, em cascata (ver Hero.tsx) —
+   mais dramático que um único fade no bloco inteiro. */
+@keyframes lineRise {
+  from { opacity: 0; transform: translateY(0.4em); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.line-rise {
+  display: block;
+  opacity: 0;
+  animation: lineRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .line-rise { opacity: 1; animation: none; }
+}

@@ -53,7 +53,7 @@ export function Hero() {
   const slide = SLIDES[active];
 
   return (
-    <section aria-label="Destaques" className="relative min-h-[520px] overflow-hidden bg-areia-50 md:min-h-[640px]">
+    <section aria-label="Destaques" className="relative isolate min-h-[560px] overflow-hidden bg-areia-50 md:min-h-[82vh]">
       {/* ícones sociais fixos na borda esquerda — só desktop, como na referência */}
       <div className="absolute left-5 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-center gap-5 md:flex">
         <a href="https://instagram.com/caueirabeachwear" target="_blank" rel="noreferrer" aria-label="Instagram"
@@ -94,14 +94,22 @@ export function Hero() {
       </div>
       <div className="absolute inset-y-6 right-6 hidden w-[44%] bg-gradient-to-r from-areia-50 via-areia-50/10 to-transparent md:block" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-14 md:px-10 md:py-24">
-        <div key={active} className="flex max-w-[480px] flex-col gap-4 animate-[heroFade_0.6s_ease-out] pl-8 md:pl-16">
+      {/* esfera de luz dourada atrás do texto — profundidade sutil, só
+          desktop, onde há espaço de sobra à esquerda. */}
+      <div className="pointer-events-none absolute -left-16 top-1/3 hidden h-80 w-80 rounded-full bg-sol/25 blur-3xl orb-float md:block" aria-hidden />
+
+      <div className="relative mx-auto flex min-h-[560px] max-w-7xl items-center px-6 py-14 md:min-h-[82vh] md:px-10 md:py-24">
+        <div key={active} className="flex max-w-[560px] flex-col gap-5 pl-8 md:pl-16">
           <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.14em] text-terra/80">
             <span className="h-1.5 w-1.5 rounded-full bg-sol pulse-dot" aria-hidden />
             {slide.kicker}
           </span>
-          <h1 className="whitespace-pre-line text-pretty font-display text-[38px] leading-[1.05] text-terra md:text-[54px]">
-            {slide.title}
+          <h1 className="text-pretty font-display text-[46px] leading-[0.98] text-terra md:text-[72px] lg:text-[84px]">
+            {slide.title.split('\n').map((line, i) => (
+              <span key={`${active}-${i}`} className="line-rise" style={{ animationDelay: `${i * 110}ms` }}>
+                {line}
+              </span>
+            ))}
           </h1>
           <p className="max-w-sm text-[15px] leading-relaxed text-tinta/75">{slide.body}</p>
 

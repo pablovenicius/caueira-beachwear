@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Product, Size } from '@/types/product';
 import { MAX_INSTALLMENTS, PIX_DISCOUNT, SIZES } from '@/types/product';
 import { useCart } from '@/lib/cart-store';
@@ -28,10 +28,37 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   );
   const activeColor = colors.find((c) => c.name === selectedColor) ?? colors[0];
 
+  // Inclinação 3D que segue o cursor — aplicada direto via ref (sem
+  // re-render a cada mousemove) pra ficar fluida. Some ao tirar o mouse
+  // (retorna pro estado neutro pela transição em CSS).
+  const tiltRef = useRef<HTMLAnchorElement>(null);
+  const onTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = tiltRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    el.style.transform = `perspective(900px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 9).toFixed(2)}deg) scale3d(1.015,1.015,1.015)`;
+  };
+  const onTiltLeave = () => {
+    const el = tiltRef.current;
+    if (el) el.style.transform = '';
+  };
+
   return (
     <article className="group relative flex min-w-0 flex-col gap-2.5">
-      <div className="relative aspect-product overflow-hidden bg-areia-200 outline outline-1 -outline-offset-1 outline-transparent transition-[outline-color] duration-300 group-hover:outline-sol/50">
-        <Link href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`}>
+      <div
+        className="relative aspect-product overflow-hidden bg-areia-200 outline outline-1 -outline-offset-1 outline-transparent transition-[outline-color] duration-300 group-hover:outline-sol/50"
+        style={{ perspective: '900px' }}
+        onMouseMove={onTiltMove}
+        onMouseLeave={onTiltLeave}
+      >
+        <Link
+          ref={tiltRef}
+          href={`/produto/${product.id}`}
+          aria-label={`Ver ${product.name}`}
+          className="block h-full w-full transition-transform duration-300 ease-out"
+        >
           {product.image_url ? (
             <Image src={product.image_url} alt={product.name} fill priority={priority}
               sizes="(max-width: 768px) 50vw, 25vw"
