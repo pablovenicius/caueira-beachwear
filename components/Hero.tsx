@@ -94,7 +94,7 @@ export function Hero() {
       <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-rosa/25 blur-3xl orb-float" aria-hidden />
       <div className="pointer-events-none absolute -right-16 bottom-10 h-80 w-80 rounded-full bg-sol/20 blur-3xl orb-float-slow" aria-hidden />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 md:grid-cols-[1.1fr_0.9fr] md:gap-6 md:px-10 md:py-28">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-6 py-14 md:grid-cols-[1.1fr_0.9fr] md:gap-6 md:px-10 md:py-28">
         <div key={active} className="flex flex-col gap-5">
           <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.18em] text-rosa">
             <span className="h-1.5 w-1.5 rounded-full bg-rosa pulse-dot" aria-hidden />
@@ -139,23 +139,17 @@ export function Hero() {
         </div>
 
         {/* foto — levemente rotacionada feito uma polaroid, friso dourado,
-            em vez de uma moldura retinha e previsível. */}
-        <div className="relative mx-auto hidden aspect-[3/4] w-full max-w-[380px] rotate-[2.5deg] overflow-hidden rounded-sm ring-1 ring-sol/50 shadow-glow transition-transform duration-500 hover:rotate-0 md:block">
-          <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-top">
+            em vez de uma moldura retinha e previsível. object-contain pra
+            mostrar o corpo inteiro e o biquíni bem visíveis, sem corte —
+            vale pro mobile (empilhado abaixo do texto) e pro desktop (ao
+            lado). Nada de vídeo apagado de fundo: essa é a própria foto,
+            em destaque. */}
+        <div className="relative mx-auto aspect-[4/5] w-full max-w-[320px] rotate-[2.5deg] overflow-hidden rounded-sm bg-noite/40 ring-1 ring-sol/50 shadow-glow transition-transform duration-500 hover:rotate-0 md:max-w-[380px]">
+          <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain">
             <source src="/video/hero-video.webm" type="video/webm" />
             <source src="/video/hero-video.mp4" type="video/mp4" />
           </video>
           <div className="pointer-events-none absolute inset-0 rounded-sm ring-1 ring-inset ring-areia-50/20" aria-hidden />
-        </div>
-
-        {/* mobile: vídeo atrás do texto, sem a moldura rotacionada (não há
-            espaço pra girar nada numa tela estreita). */}
-        <div className="absolute inset-0 -z-10 md:hidden" aria-hidden>
-          <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-top opacity-30">
-            <source src="/video/hero-video.webm" type="video/webm" />
-            <source src="/video/hero-video.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/80 to-noite/40" />
         </div>
       </div>
     </section>
