@@ -80,6 +80,16 @@ export function Hero() {
         <div className="absolute inset-0 w-[46%] bg-gradient-to-r from-areia-50 via-areia-50/15 to-transparent" aria-hidden />
       </div>
 
+      {/* vídeo no mobile — atrás do texto, sangrando da direita, com degradê claro por cima
+          (mesmo efeito do desktop, só que mais forte pra o texto continuar legível) */}
+      <div className="absolute inset-0 md:hidden" aria-hidden>
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-[75%_center]">
+          <source src="/video/hero-video.webm" type="video/webm" />
+          <source src="/video/hero-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-areia-50 via-areia-50/80 to-areia-50/20" />
+      </div>
+
       <div className="relative mx-auto max-w-7xl px-6 py-14 md:px-10 md:py-24">
         <div key={active} className="flex max-w-[480px] flex-col gap-4 animate-[heroFade_0.6s_ease-out] pl-8 md:pl-16">
           <span className="text-[13px] font-medium text-terra/80">{slide.kicker}</span>
@@ -101,14 +111,6 @@ export function Hero() {
               {slide.cta}
             </Link>
             <span className="absolute -bottom-1.5 -left-1.5 h-3 w-3 rounded-full bg-sol" aria-hidden />
-          </div>
-
-          {/* vídeo no mobile — abaixo do texto, largura cheia, mesmo fundo claro */}
-          <div className="relative mt-5 aspect-[4/5] w-full overflow-hidden rounded-sm md:hidden">
-            <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover">
-              <source src="/video/hero-video.webm" type="video/webm" />
-              <source src="/video/hero-video.mp4" type="video/mp4" />
-            </video>
           </div>
 
           <div className="mt-1 flex gap-2">
