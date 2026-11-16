@@ -53,7 +53,7 @@ export function Hero() {
   const slide = SLIDES[active];
 
   return (
-    <section aria-label="Destaques" className="relative overflow-hidden bg-areia-50">
+    <section aria-label="Destaques" className="relative min-h-[520px] overflow-hidden bg-areia-50 md:min-h-[640px]">
       {/* ícones sociais fixos na borda esquerda — só desktop, como na referência */}
       <div className="absolute left-5 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-center gap-5 md:flex">
         <a href="https://instagram.com/caueirabeachwear" target="_blank" rel="noreferrer" aria-label="Instagram"
@@ -73,7 +73,7 @@ export function Hero() {
       {/* vídeo sangrando da direita — só desktop; funde no fundo com degradê,
           não é uma caixa fechada */}
       <div className="absolute inset-y-0 right-0 hidden w-[54%] md:block">
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover">
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-right">
           <source src="/video/hero-video.webm" type="video/webm" />
           <source src="/video/hero-video.mp4" type="video/mp4" />
         </video>
@@ -81,9 +81,10 @@ export function Hero() {
       </div>
 
       {/* vídeo no mobile — atrás do texto, sangrando da direita, com degradê claro por cima
-          (mesmo efeito do desktop, só que mais forte pra o texto continuar legível) */}
+          (mesmo efeito do desktop, só que mais forte pra o texto continuar legível).
+          object-contain pra sempre mostrar a pessoa inteira, da cabeça aos pés. */}
       <div className="absolute inset-0 md:hidden" aria-hidden>
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-[75%_center]">
+        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-contain object-[75%_center]">
           <source src="/video/hero-video.webm" type="video/webm" />
           <source src="/video/hero-video.mp4" type="video/mp4" />
         </video>
