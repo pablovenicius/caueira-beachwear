@@ -120,6 +120,16 @@ export function Header() {
               )}
             </div>
 
+            <a
+              href="https://instagram.com/caueirabeachwear"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram da Caueira Beachwear"
+              className="grid h-10 w-10 place-items-center text-tinta hover:text-sol-700"
+            >
+              <InstagramIcon />
+            </a>
+
             <button aria-label={`Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}`} onClick={() => setOpen(true)}
               className="relative grid h-10 w-10 place-items-center text-tinta hover:text-sol-700">
               <BagIcon />
@@ -131,29 +141,30 @@ export function Header() {
             </button>
           </div>
         </div>
-
-        {/* categorias no mobile: não é mais um painel flutuante por cima da
-            página — é parte do fluxo normal do header, então quando abre ele
-            empurra o resto da página (hero, conteúdo) pra baixo em vez de
-            sobrepor. */}
-        <nav
-          aria-label="Categorias"
-          className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${
-            sheetOpen ? 'max-h-[420px]' : 'max-h-0'
-          }`}
-        >
-          <div className="flex flex-col gap-1 px-4 pb-4 pt-1">
-            {NAV.map((n) => (
-              <Link key={n.label} href={n.href} onClick={() => setSheetOpen(false)}
-                className={`rounded-lg px-3 py-3 text-[16px] font-medium ${n.accent ? 'text-terra' : 'text-tinta'}`}>
-                {n.label}
-              </Link>
-            ))}
-            <div className="my-1 h-px bg-areia-200" />
-            <Link href="/ajuda" onClick={() => setSheetOpen(false)} className="rounded-lg px-3 py-3 text-[15px] text-tinta/60">Ajuda</Link>
-          </div>
-        </nav>
       </div>
+
+      {/* categorias no mobile: flutua por cima do conteúdo (absolute, ancorado
+          no fim do header, que é o ancestral posicionado) em vez de empurrar
+          a página pra baixo — assim o início da página (foto/vídeo do hero)
+          continua visível, só fica coberto por baixo do menu enquanto ele
+          está aberto. */}
+      <nav
+        aria-label="Categorias"
+        className={`absolute inset-x-0 top-full z-40 overflow-hidden border-b border-sol/15 bg-areia-50 shadow-lg transition-[max-height] duration-300 ease-in-out md:hidden ${
+          sheetOpen ? 'max-h-[420px]' : 'max-h-0 border-b-0 shadow-none'
+        }`}
+      >
+        <div className="flex flex-col gap-1 px-4 pb-4 pt-2">
+          {NAV.map((n) => (
+            <Link key={n.label} href={n.href} onClick={() => setSheetOpen(false)}
+              className={`rounded-lg px-3 py-3 text-[16px] font-medium ${n.accent ? 'text-terra' : 'text-tinta'}`}>
+              {n.label}
+            </Link>
+          ))}
+          <div className="my-1 h-px bg-areia-200" />
+          <Link href="/ajuda" onClick={() => setSheetOpen(false)} className="rounded-lg px-3 py-3 text-[15px] text-tinta/60">Ajuda</Link>
+        </div>
+      </nav>
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </header>
@@ -171,6 +182,15 @@ function CloseIcon() {
   return (
     <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
       <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  );
+}
+function InstagramIcon() {
+  return (
+    <svg aria-hidden width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
     </svg>
   );
 }
