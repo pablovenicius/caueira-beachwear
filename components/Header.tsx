@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/lib/cart-store';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
-import { Logo } from '@/components/Logo';
 
 const NAV = [
   { label: 'Biquínis', href: '/categoria/biquinis' },
@@ -82,8 +81,13 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
             {sheetOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
 
-          <Link href="/" aria-label="Caueira Beachwear — início" className={`mx-auto md:col-start-2 ${overlay ? 'drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)]' : ''}`}>
-            <Logo size={44} />
+          <Link
+            href="/"
+            aria-label="Caueira Beachwear — início"
+            className={`mx-auto flex items-center gap-2 md:col-start-2 ${ink} ${overlay ? 'drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)]' : ''}`}
+          >
+            <SunMark className={overlay ? 'text-areia-50' : 'text-terra'} />
+            <span className="font-sans text-[17px] font-semibold uppercase leading-none tracking-[0.26em] md:text-[19px]">Caueira</span>
           </Link>
 
           <div className="flex items-center justify-end gap-0.5 md:col-start-3">
@@ -213,6 +217,14 @@ export function Header({ transparent = false }: { transparent?: boolean }) {
   );
 }
 
+function SunMark({ className = '' }: { className?: string }) {
+  return (
+    <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`shrink-0 ${className}`}>
+      <circle cx="12" cy="12" r="4.2" />
+      <path strokeLinecap="round" d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7M18.6 18.6l-1.7-1.7M7.1 7.1 5.4 5.4" />
+    </svg>
+  );
+}
 function MenuIcon() {
   return (
     <svg aria-hidden width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">

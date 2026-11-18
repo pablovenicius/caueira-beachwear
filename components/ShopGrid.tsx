@@ -48,16 +48,16 @@ export function ShopGrid({
           <h2 className="font-display text-2xl italic text-tinta md:text-3xl">{title}</h2>
           <p className="mt-1 text-[14px] text-tinta/60 md:text-[15px]">{subtitle}</p>
         </div>
-        <span className="text-sm text-tinta/50">{filtered.length} {filtered.length === 1 ? 'peça' : 'peças'}</span>
+        <span className="text-[13px] uppercase tracking-[0.08em] text-tinta/45">{filtered.length} {filtered.length === 1 ? 'peça' : 'peças'}</span>
       </div>
 
-      <div className="no-scrollbar mb-6 flex gap-2 overflow-x-auto pb-1 md:mb-8" role="group" aria-label="Filtrar por peça">
+      <div className="no-scrollbar mb-8 flex gap-6 overflow-x-auto border-b border-areia-200 pb-px md:mb-10" role="group" aria-label="Filtrar por peça">
         {PIECE_FILTERS.map((f) => {
           const on = piece === f;
           return (
             <button key={f} type="button" aria-pressed={on} onClick={() => setPiece(f)}
-              className={`h-9 flex-none whitespace-nowrap rounded-full border px-4 text-[13px] font-medium transition ${
-                on ? 'border-terra bg-terra text-white' : 'border-areia-300 bg-white text-tinta/70 hover:border-sol-700'
+              className={`flex-none whitespace-nowrap border-b-2 pb-3 text-[12px] font-medium uppercase tracking-[0.1em] transition ${
+                on ? 'border-terra text-tinta' : 'border-transparent text-tinta/45 hover:text-tinta/70'
               }`}>
               {f}
             </button>
