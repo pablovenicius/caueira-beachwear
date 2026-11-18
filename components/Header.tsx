@@ -92,7 +92,7 @@ export function Header() {
               />
             </label>
 
-            <div className="relative hidden md:grid">
+            <div className="relative grid">
               {!loading && user ? (
                 <button
                   aria-label="Minha conta"
