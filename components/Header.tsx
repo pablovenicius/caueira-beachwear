@@ -47,11 +47,6 @@ export function Header() {
         scrolled ? 'shadow-[0_8px_24px_rgba(31,74,77,0.10)]' : ''
       }`}
     >
-      <p className="relative overflow-hidden bg-mar-700 py-1.5 text-center text-[12px] tracking-wide text-sol/90">
-        <span className="grain-overlay" aria-hidden />
-        <span className="relative">Frete grátis acima de R$ 399 · 5% off no Pix</span>
-      </p>
-
       <div className="border-b border-sol/15 bg-gradient-to-b from-transparent to-sol/[0.03]">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:px-6">
           <button
