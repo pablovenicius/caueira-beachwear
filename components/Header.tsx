@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/lib/cart-store';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from '@/components/AuthModal';
@@ -30,6 +30,20 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  // clique fora do menu "Minha conta" fecha a aba — em qualquer lugar da
+  // página, não só no próprio botão.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [menuOpen]);
 
   // sombra sutil só aparece depois que a página rola — dá uma noção de
   // profundidade/"vidro" ao cabeçalho fixo sem precisar de sombra pesada o
@@ -87,7 +101,7 @@ export function Header() {
               />
             </label>
 
-            <div className="relative grid">
+            <div ref={accountRef} className="relative grid">
               {!loading && user ? (
                 <button
                   aria-label="Minha conta"
