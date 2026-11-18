@@ -15,13 +15,16 @@ const NAV = [
 ];
 
 /**
- * Header mínimo e mobile-first: uma única linha (sacola, marca, busca/conta)
- * — nada de segunda fileira de navegação disputando espaço com a tela
- * pequena. No mobile as categorias moram na folha que abre pelo ícone de
- * menu (a barra inferior já tem o atalho "Categorias"). No desktop a
- * navegação e a busca aparecem inline.
+ * Header de referência editorial (Lenny Niemeyer): no desktop a marca fica
+ * centralizada numa primeira fileira, com a navegação numa segunda fileira
+ * logo abaixo — nada de tudo espremido numa linha só. Quando `transparent`
+ * (só a home, por cima do hero em tela cheia) o header nasce sem fundo e
+ * com texto/ícones claros, flutuando sobre a foto; assim que a página rola
+ * um pixel, ele vira sólido (fundo areia, texto escuro) — a mesma
+ * transição que lojas de alto padrão usam pra abrir com a imagem "pegando
+ * a tela toda" sem esconder a navegação depois.
  */
-export function Header() {
+export function Header({ transparent = false }: { transparent?: boolean }) {
   const items = useCart((s) => s.items);
   const setOpen = useCart((s) => s.setOpen);
   const count = items.reduce((t, i) => t + i.qty, 0);
@@ -45,9 +48,8 @@ export function Header() {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, [menuOpen]);
 
-  // sombra sutil só aparece depois que a página rola — dá uma noção de
-  // profundidade/"vidro" ao cabeçalho fixo sem precisar de sombra pesada o
-  // tempo todo (toque discreto de "tech", comum em lojas de alto padrão).
+  // sem fundo até a página rolar — só importa quando transparent=true; nas
+  // outras páginas o header já nasce sólido.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -55,49 +57,48 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const overlay = transparent && !scrolled;
+  const ink = overlay ? 'text-areia-50' : 'text-tinta';
+  const inkSoft = overlay ? 'text-areia-50/75' : 'text-tinta/70';
+
   return (
     <header
-      className={`sticky top-0 z-30 bg-areia-50/95 backdrop-blur transition-shadow duration-300 ${
-        scrolled ? 'shadow-[0_8px_24px_rgba(31,74,77,0.10)]' : ''
-      }`}
+      className={`inset-x-0 top-0 z-40 transition-colors duration-300 ${transparent ? 'fixed' : 'sticky'} ${
+        overlay ? 'bg-transparent' : 'bg-areia-50/95 backdrop-blur'
+      } ${scrolled && !overlay ? 'shadow-[0_8px_24px_rgba(31,74,77,0.10)]' : ''}`}
     >
-      <div className="border-b border-sol/15 bg-gradient-to-b from-transparent to-sol/[0.03]">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:px-6">
+      <div className={`transition-colors duration-300 ${overlay ? 'border-transparent' : 'border-b border-sol/15'}`}>
+        {/* linha 1 — menu (mobile) · marca centralizada · ações */}
+        <div className="mx-auto grid max-w-7xl grid-cols-[2.5rem_1fr_auto] items-center gap-3 px-4 py-3 md:grid-cols-[1fr_auto_1fr] md:px-6 md:py-5">
           <button
             type="button"
             aria-label="Abrir categorias"
             aria-expanded={sheetOpen}
             onClick={() => setSheetOpen((v) => !v)}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-terra/30 text-tinta md:hidden"
+            className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border transition md:hidden ${
+              overlay ? 'border-areia-50/40 text-areia-50' : 'border-terra/30 text-tinta'
+            }`}
           >
             {sheetOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
 
-          <Link href="/" aria-label="Caueira Beachwear — início" className="mx-auto md:mx-0">
-            <Logo size={46} />
+          <Link href="/" aria-label="Caueira Beachwear — início" className={`mx-auto md:col-start-2 ${overlay ? 'drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)]' : ''}`}>
+            <Logo size={44} />
           </Link>
 
-          <nav aria-label="Categorias" className="hidden flex-1 justify-center gap-1 md:flex">
-            {NAV.map((n) => (
-              <Link
-                key={n.label}
-                href={n.href}
-                className={`whitespace-nowrap rounded-full px-3.5 py-2 text-[14px] font-medium transition hover:bg-sol/10 ${
-                  n.accent ? 'text-terra' : 'text-tinta/70'
-                }`}
-              >
-                {n.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="ml-auto flex items-center gap-0.5 md:ml-0">
-            <label className="mr-1 hidden h-10 w-56 items-center gap-2 rounded-full border border-areia-200 bg-white px-3.5 transition focus-within:border-sol/50 lg:flex">
-              <SearchIcon />
+          <div className="flex items-center justify-end gap-0.5 md:col-start-3">
+            <label
+              className={`mr-1 hidden h-10 w-56 items-center gap-2 rounded-full border px-3.5 transition lg:flex ${
+                overlay ? 'border-areia-50/30 bg-white/10' : 'border-areia-200 bg-white focus-within:border-sol/50'
+              }`}
+            >
+              <SearchIcon className={overlay ? 'text-areia-50/70' : 'text-tinta/45'} />
               <input
                 aria-label="Buscar produtos"
                 placeholder="Buscar…"
-                className="w-full border-none bg-transparent text-sm text-tinta outline-none placeholder:text-tinta/40"
+                className={`w-full border-none bg-transparent text-sm outline-none ${
+                  overlay ? 'text-areia-50 placeholder:text-areia-50/60' : 'text-tinta placeholder:text-tinta/40'
+                }`}
               />
             </label>
 
@@ -108,18 +109,18 @@ export function Header() {
                   aria-haspopup="menu"
                   aria-expanded={menuOpen}
                   onClick={() => setMenuOpen((v) => !v)}
-                  className="grid h-10 w-10 place-items-center text-tinta hover:text-sol-700"
+                  className={`grid h-10 w-10 place-items-center transition hover:opacity-70 ${ink}`}
                 >
                   <UserIcon />
                 </button>
               ) : (
-                <button aria-label="Entrar ou criar conta" onClick={() => setAuthOpen(true)} className="grid h-10 w-10 place-items-center text-tinta hover:text-sol-700">
+                <button aria-label="Entrar ou criar conta" onClick={() => setAuthOpen(true)} className={`grid h-10 w-10 place-items-center transition hover:opacity-70 ${ink}`}>
                   <UserIcon />
                 </button>
               )}
 
               {menuOpen && user && (
-                <div role="menu" className="absolute right-0 top-11 w-56 rounded-md bg-white p-2 text-sm shadow-lg ring-1 ring-sol/15">
+                <div role="menu" className="absolute right-0 top-11 w-56 rounded-md bg-white p-2 text-sm text-tinta shadow-lg ring-1 ring-sol/15">
                   <p className="truncate px-3 py-2 text-tinta/50">{user.email}</p>
                   <Link role="menuitem" href="/minha-conta/pedidos" onClick={() => setMenuOpen(false)}
                     className="block rounded px-3 py-2.5 text-tinta hover:bg-areia-100">
@@ -150,13 +151,13 @@ export function Header() {
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram da Caueira Beachwear"
-              className="grid h-10 w-10 place-items-center text-tinta hover:text-sol-700"
+              className={`grid h-10 w-10 place-items-center transition hover:opacity-70 ${ink}`}
             >
               <InstagramIcon />
             </a>
 
             <button aria-label={`Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}`} onClick={() => setOpen(true)}
-              className="relative grid h-10 w-10 place-items-center text-tinta hover:text-sol-700">
+              className={`relative grid h-10 w-10 place-items-center transition hover:opacity-70 ${ink}`}>
               <BagIcon />
               {count > 0 && (
                 <span className="absolute right-0 top-0 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-terra px-1 text-[10px] font-bold text-white">
@@ -166,6 +167,22 @@ export function Header() {
             </button>
           </div>
         </div>
+
+        {/* linha 2 — navegação centralizada, só desktop (letras bem espaçadas,
+            como numa vitrine editorial, em vez de pills coloridos) */}
+        <nav aria-label="Categorias" className="hidden justify-center gap-8 pb-4 md:flex">
+          {NAV.map((n) => (
+            <Link
+              key={n.label}
+              href={n.href}
+              className={`whitespace-nowrap text-[12px] font-medium uppercase tracking-[0.16em] transition hover:opacity-70 ${
+                n.accent ? (overlay ? 'text-areia-50' : 'text-terra') : inkSoft
+              }`}
+            >
+              {n.label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       {/* categorias no mobile: flutua por cima do conteúdo (absolute, ancorado
@@ -219,9 +236,9 @@ function InstagramIcon() {
     </svg>
   );
 }
-function SearchIcon() {
+function SearchIcon({ className = '' }: { className?: string }) {
   return (
-    <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-tinta/45">
+    <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
       <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
     </svg>
   );

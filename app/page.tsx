@@ -35,7 +35,7 @@ export default async function Home() {
 
   return (
     <>
-      <Header />
+      <Header transparent />
 
       <main>
         <Hero />

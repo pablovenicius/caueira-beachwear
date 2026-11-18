@@ -1,26 +1,23 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const SLIDES = [
   {
     kicker: 'Coleção verão',
-    title: 'Pele no sol,\npés n’areia.',
-    body: 'Biquínis e maiôs modelados pra se mover com você — do mergulho ao fim de tarde.',
+    title: 'Pele no sol, pés n’areia.',
     cta: 'Ver coleção',
     href: '/categoria/lancamentos',
   },
   {
     kicker: 'Maiôs · peça única',
-    title: 'Linhas que\nabraçam.',
-    body: 'Caimento sem marcas, tecido que não desbota e proteção UV50+ em cada peça.',
+    title: 'Linhas que abraçam.',
     cta: 'Ver maiôs',
     href: '/categoria/maios',
   },
   {
     kicker: 'Só esta semana',
-    title: 'Fim de tarde\nem promoção.',
-    body: 'Até 15% off em peças selecionadas enquanto durar o estoque.',
+    title: 'Fim de tarde em promoção.',
     cta: 'Ver promoções',
     href: '/categoria/promocoes',
   },
@@ -29,143 +26,57 @@ const SLIDES = [
 const ROTATE_MS = 6000;
 
 /**
- * Quarta reformulação: ruptura real de layout, não um retoque em cima do
- * fundo claro de sempre. Fundo quase-preto (noite), título gigante
- * preenchido com o gradiente da marca, uma luz que segue o cursor
- * revelando o grão por baixo (só desktop, com mouse de verdade), foto
- * levemente rotacionada feito uma polaroid — e a seção inteira termina
- * num corte diagonal, não numa linha reta, pra já avisar que a página não
- * vai ser uma pilha de retângulos.
+ * Referência: Lenny Niemeyer. A foto toma a tela inteira — do topo até a
+ * borda inferior, sem header reservando altura em cima dela (o Header com
+ * transparent=true flutua por cima, sem fundo, até a página rolar). Nada de
+ * grade de duas colunas, card rotacionado ou texto gigante em gradiente:
+ * uma legenda discreta no canto inferior, do jeito que uma vitrine de moda
+ * de alto padrão deixa a imagem falar.
  */
 export function Hero() {
   const [active, setActive] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
-  const spotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = setInterval(() => setActive((v) => (v + 1) % SLIDES.length), ROTATE_MS);
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const spot = spotRef.current;
-    if (!section || !spot) return;
-    const onMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      spot.style.setProperty('--x', `${e.clientX - rect.left}px`);
-      spot.style.setProperty('--y', `${e.clientY - rect.top}px`);
-      spot.style.opacity = '1';
-    };
-    const onLeave = () => {
-      spot.style.opacity = '0';
-    };
-    section.addEventListener('mousemove', onMove);
-    section.addEventListener('mouseleave', onLeave);
-    return () => {
-      section.removeEventListener('mousemove', onMove);
-      section.removeEventListener('mouseleave', onLeave);
-    };
-  }, []);
-
   const slide = SLIDES[active];
 
   return (
-    <section
-      ref={sectionRef}
-      aria-label="Destaques"
-      className="relative isolate aspect-[9/16] overflow-hidden bg-noite md:aspect-auto md:min-h-[92vh]"
-    >
-      {/* luz que segue o cursor — revela o grão por baixo, só onde o mouse
-          passa. Decorativa, opacidade 0 até o primeiro movimento. */}
-      <div
-        ref={spotRef}
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 hidden md:block"
-        style={{
-          background:
-            'radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), rgba(232,83,122,0.16), transparent 70%)',
-        }}
-        aria-hidden
-      />
-      <span className="grain-overlay" aria-hidden />
+    <section aria-label="Destaques" className="relative isolate h-[100svh] min-h-[560px] w-full overflow-hidden bg-areia-200">
+      <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="absolute inset-0 h-full w-full object-cover object-center">
+        <source src="/video/hero-video.webm" type="video/webm" />
+        <source src="/video/hero-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-t from-tinta/60 via-tinta/5 to-transparent" aria-hidden />
 
-      {/* esferas de luz em deriva — mesmo truque do Manifesto, pra ter a
-          cara da mesma família visual. */}
-      <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-rosa/25 blur-3xl orb-float" aria-hidden />
-      <div className="pointer-events-none absolute -right-16 bottom-10 h-80 w-80 rounded-full bg-sol/20 blur-3xl orb-float-slow" aria-hidden />
-
-      {/* mobile: a própria foto, em tela cheia, atrás do texto — a seção
-          tem exatamente a proporção do vídeo (9:16), então object-cover
-          mostra o corpo inteiro sem cortar nada. Degradê leve, só o
-          suficiente pra ler o texto, sem apagar a foto. */}
-      <div className="absolute inset-0 md:hidden" aria-hidden>
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-center">
-          <source src="/video/hero-video.webm" type="video/webm" />
-          <source src="/video/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/50 to-noite/5" />
+      <div key={active} className="absolute inset-x-0 bottom-0 flex flex-col gap-3 px-6 pb-20 md:px-12 md:pb-24">
+        <span className="line-rise text-[12px] font-medium uppercase tracking-[0.22em] text-areia-50/80">{slide.kicker}</span>
+        <h1 className="line-rise max-w-xl text-pretty font-display text-[30px] italic leading-[1.15] text-areia-50 md:text-[46px]" style={{ animationDelay: '80ms' }}>
+          {slide.title}
+        </h1>
+        <Link
+          href={slide.href}
+          className="group mt-1 inline-flex w-fit items-center gap-2.5 text-[13px] font-medium uppercase tracking-[0.14em] text-areia-50"
+        >
+          {slide.cta}
+          <span className="h-px w-7 bg-areia-50 transition-all duration-300 group-hover:w-11" aria-hidden />
+        </Link>
       </div>
 
-      {/* desktop: a foto deixa de ser um card pequeno e rotacionado e passa
-          a ser um painel grande e estruturado, encostado na borda direita
-          da tela (fora do container com padding), ocupando a altura toda
-          da seção — sem moldura, sem rotação. */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48%] overflow-hidden md:block">
-        <video autoPlay loop muted playsInline poster="/video/hero-poster.jpg" className="h-full w-full object-cover object-[center_20%]">
-          <source src="/video/hero-video.webm" type="video/webm" />
-          <source src="/video/hero-video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-noite to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-noite/70 to-transparent" />
-      </div>
-
-      <div className="relative mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-8 px-6 py-10 md:h-auto md:grid-cols-[1.1fr_0.9fr] md:gap-6 md:px-10 md:py-28">
-        <div key={active} className="flex flex-col gap-5 md:max-w-xl">
-          <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.18em] text-rosa">
-            <span className="h-1.5 w-1.5 rounded-full bg-rosa pulse-dot" aria-hidden />
-            {slide.kicker}
-          </span>
-          <h1 className="text-pretty font-display text-[54px] leading-[0.95] md:text-[88px] lg:text-[104px]">
-            {slide.title.split('\n').map((line, i) => (
-              <span
-                key={`${active}-${i}`}
-                className="text-gradient-sunset line-rise"
-                style={{ animationDelay: `${i * 110}ms` }}
-              >
-                {line}
-              </span>
-            ))}
-          </h1>
-          <p className="max-w-sm text-[15px] leading-relaxed text-areia-200/70">{slide.body}</p>
-
-          <div className="relative mt-2 w-fit">
-            <Link
-              href={slide.href}
-              className="group relative inline-flex h-[54px] items-center overflow-hidden rounded-full border border-sol/40 bg-gradient-to-r from-rosa to-sol px-8 text-sm font-semibold text-noite transition hover:-translate-y-0.5 hover:shadow-glow"
-            >
-              <span className="relative z-[1]">{slide.cta}</span>
-              <span className="shimmer-sweep" aria-hidden />
-            </Link>
-          </div>
-
-          <div className="mt-2 flex gap-2">
-            {SLIDES.map((s, i) => (
-              <button
-                key={s.title}
-                type="button"
-                aria-label={`Ver destaque ${i + 1}`}
-                aria-current={i === active}
-                onClick={() => setActive(i)}
-                className="h-[3px] rounded-full bg-gradient-to-r from-rosa to-sol transition-all duration-300"
-                style={{ width: i === active ? 28 : 10, opacity: i === active ? 1 : 0.3 }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* célula vazia — mantém a coluna de texto na largura certa; a
-            foto em si já está renderizada como painel de fundo acima. */}
-        <div className="hidden md:block" aria-hidden />
+      <div className="absolute inset-x-0 bottom-6 flex justify-center gap-2 md:bottom-8">
+        {SLIDES.map((s, i) => (
+          <button
+            key={s.title}
+            type="button"
+            aria-label={`Ver destaque ${i + 1}`}
+            aria-current={i === active}
+            onClick={() => setActive(i)}
+            className="h-[2px] rounded-full bg-areia-50 transition-all duration-300"
+            style={{ width: i === active ? 26 : 10, opacity: i === active ? 1 : 0.4 }}
+          />
+        ))}
       </div>
     </section>
   );
