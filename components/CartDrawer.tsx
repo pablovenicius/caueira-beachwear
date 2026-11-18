@@ -29,8 +29,8 @@ export function CartDrawer() {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-tinta/45 data-[state=open]:animate-in data-[state=open]:fade-in" />
-        <Dialog.Content className="fixed inset-y-0 right-0 flex w-full max-w-md flex-col bg-areia-50 shadow-xl">
+        <Dialog.Overlay className="fixed inset-x-0 top-0 bottom-[var(--bottom-nav-h)] bg-tinta/45 data-[state=open]:animate-in data-[state=open]:fade-in md:bottom-0" />
+        <Dialog.Content className="fixed right-0 top-0 bottom-[var(--bottom-nav-h)] flex w-full max-w-md flex-col bg-areia-50 shadow-xl md:bottom-0">
           <header className="flex items-center justify-between border-b border-areia-300 p-5">
             <Dialog.Title className="font-display text-xl font-normal text-tinta">Sua sacola ({items.length})</Dialog.Title>
             <Dialog.Close aria-label="Fechar sacola" className="grid h-11 w-11 place-items-center text-tinta/60 hover:text-tinta">✕</Dialog.Close>

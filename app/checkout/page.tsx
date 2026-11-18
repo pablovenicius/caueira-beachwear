@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
 import { useCart } from '@/lib/cart-store';
 import { useAuth } from '@/lib/auth-context';
@@ -208,6 +209,7 @@ export default function CheckoutPage() {
         )}
       </main>
       <Footer />
+      <BottomNav />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </>
   );
