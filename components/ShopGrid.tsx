@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import type { Product } from '@/types/product';
 import { ProductCard } from '@/components/ProductCard';
 import { Reveal } from '@/components/Reveal';
@@ -34,6 +35,14 @@ export function ShopGrid({
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+      <Link
+        href="/"
+        className="mb-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-tinta/60 transition hover:text-terra md:mb-6"
+      >
+        <BackIcon />
+        Início
+      </Link>
+
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3 md:mb-8">
         <div>
           <h2 className="font-display text-2xl italic text-tinta md:text-3xl">{title}</h2>
@@ -71,5 +80,13 @@ export function ShopGrid({
         </div>
       )}
     </section>
+  );
+}
+
+function BackIcon() {
+  return (
+    <svg aria-hidden width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 12H5M11 18l-6-6 6-6" />
+    </svg>
   );
 }
